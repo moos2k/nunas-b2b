@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# nunas-b2b
 
-## Getting Started
+화장품 수출업을 위한 B2B 발주 웹사이트.
 
-First, run the development server:
+해외 바이어(기존 고객)가 상품 조회 → 발주서 제출 → 견적 확정까지 온라인으로 처리할 수 있도록 이메일·메신저 수작업을 디지털화합니다.
+
+## 기술 스택
+
+- **Frontend:** Next.js 15 (App Router) + TypeScript
+- **Styling:** Tailwind CSS
+- **Backend/DB:** Supabase (PostgreSQL + Auth + Storage)
+- **Deploy:** Vercel
+
+## 개발 로드맵
+
+- [x] Phase 0 — 첫 배포 (Next.js 프로젝트 생성 + Vercel 배포)
+- [ ] Phase 1 — 상품 카탈로그 (상품 목록·상세 + 관리자 등록)
+- [ ] Phase 2 — 인증/계정 (관리자·고객 로그인, 역할 구분)
+- [ ] Phase 3 — 발주 (발주서 제출 + 상태 관리)
+- [ ] Phase 4 — 문의 (고객 문의 + 관리자 답변)
+- [ ] Phase 5 — 다국어·마무리 (영어/인도네시아어, SEO)
+
+## 로컬 실행
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+브라우저에서 [http://localhost:3000](http://localhost:3000) 열기.
