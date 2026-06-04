@@ -116,12 +116,18 @@
 
 ## 6. 지금 시작점
 
-**현재: Phase 1 진행 예정.**
+**현재: Phase 1 진행 중 → Phase 2 (인증) 예정.**
 
 완료된 단계:
 - ✅ Phase 0 — GitHub 저장소 `moos2k/nunas-b2b` 생성, Vercel 배포 완료 (https://nunas-b2b.vercel.app)
+- ✅ Phase 1 일부 — Supabase 연결, 상품 목록(`/products`), 상품 상세(`/products/[id]`) 완료
 
-다음 목표는 **Phase 1 (상품 카탈로그)**.
+개발 환경:
+- 코드 위치: `C:\dev\nunas-b2b` (Google Drive 아님 — npm 충돌 문제로 로컬로 이동)
+- Next.js 16 사용 중 (middleware.ts → proxy.ts 로 변경됨)
+- Supabase 환경변수는 Vercel 대시보드에 등록 완료
+
+다음 목표는 **Phase 2 (인증/계정)** — 관리자 로그인, 고객 로그인, 역할 구분.
 
 세션을 시작하면:
 1. 현재 어느 단계인지 확인하고,
