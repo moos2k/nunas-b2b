@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import OrderButton from './order-button'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -41,9 +42,12 @@ export default async function ProductDetailPage({ params }: Props) {
           {product.sku && <p>SKU: {product.sku}</p>}
         </div>
 
-        <button className="mt-8 w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
-          Add to Order
-        </button>
+        <OrderButton
+          productId={product.id}
+          productName={product.name}
+          unitPrice={Number(product.base_price)}
+          currency={product.currency}
+        />
       </div>
     </main>
   )
