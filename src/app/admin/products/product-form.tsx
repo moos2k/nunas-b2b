@@ -56,7 +56,7 @@ export default function ProductForm({ product }: Props) {
       : await supabase.from('products').insert(payload)
 
     if (error) {
-      setError('저장 중 오류가 발생했습니다: ' + error.message)
+      setError('Failed to save: ' + error.message)
       setLoading(false)
       return
     }
@@ -69,7 +69,7 @@ export default function ProductForm({ product }: Props) {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          상품명 <span className="text-red-400">*</span>
+          Product Name <span className="text-red-400">*</span>
         </label>
         <input
           type="text"
@@ -81,7 +81,7 @@ export default function ProductForm({ product }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">설명</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
         <textarea
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -92,12 +92,12 @@ export default function ProductForm({ product }: Props) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">카테고리</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
           <input
             type="text"
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value })}
-            placeholder="예: Serum, Toner"
+            placeholder="e.g. Serum, Toner"
             className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
           />
         </div>
@@ -107,7 +107,7 @@ export default function ProductForm({ product }: Props) {
             type="text"
             value={form.sku}
             onChange={(e) => setForm({ ...form, sku: e.target.value })}
-            placeholder="예: SKU-001"
+            placeholder="e.g. SKU-001"
             className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
           />
         </div>
@@ -116,7 +116,7 @@ export default function ProductForm({ product }: Props) {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            기준가 <span className="text-red-400">*</span>
+            Base Price <span className="text-red-400">*</span>
           </label>
           <input
             type="number"
@@ -129,7 +129,7 @@ export default function ProductForm({ product }: Props) {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">통화</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
           <select
             value={form.currency}
             onChange={(e) => setForm({ ...form, currency: e.target.value })}
@@ -151,7 +151,7 @@ export default function ProductForm({ product }: Props) {
           className="w-4 h-4"
         />
         <label htmlFor="is_active" className="text-sm text-gray-700">
-          활성 상품으로 표시 (고객에게 보임)
+          Active (visible to customers)
         </label>
       </div>
 
@@ -163,14 +163,14 @@ export default function ProductForm({ product }: Props) {
           disabled={loading}
           className="flex-1 bg-black text-white py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
         >
-          {loading ? '저장 중...' : isEdit ? '수정 완료' : '등록하기'}
+          {loading ? 'Saving...' : isEdit ? 'Save Changes' : 'Add Product'}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
           className="px-6 py-2 border rounded-lg text-sm hover:bg-gray-50 transition-colors"
         >
-          취소
+          Cancel
         </button>
       </div>
     </form>

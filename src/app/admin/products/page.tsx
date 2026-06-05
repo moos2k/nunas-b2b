@@ -17,9 +17,9 @@ export default async function AdminProductsPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold">상품 관리</h1>
+        <h1 className="text-2xl font-bold">Products</h1>
         <Link href="/admin/products/new" className="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
-          + 상품 등록
+          + Add Product
         </Link>
       </div>
 
@@ -27,11 +27,11 @@ export default async function AdminProductsPage() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">상품명</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">카테고리</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Name</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Category</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">SKU</th>
-              <th className="text-right px-4 py-3 font-medium text-gray-600">가격</th>
-              <th className="text-center px-4 py-3 font-medium text-gray-600">활성</th>
+              <th className="text-right px-4 py-3 font-medium text-gray-600">Price</th>
+              <th className="text-center px-4 py-3 font-medium text-gray-600">Active</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
@@ -44,7 +44,7 @@ export default async function AdminProductsPage() {
                 <td className="px-4 py-3 text-right">{product.currency} {Number(product.base_price).toFixed(2)}</td>
                 <td className="px-4 py-3 text-center">{product.is_active ? '✅' : '❌'}</td>
                 <td className="px-4 py-3 text-right">
-                  <Link href={`/admin/products/${product.id}/edit`} className="text-blue-500 hover:underline">수정</Link>
+                  <Link href={`/admin/products/${product.id}/edit`} className="text-blue-500 hover:underline">Edit</Link>
                 </td>
               </tr>
             ))}

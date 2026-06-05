@@ -19,11 +19,7 @@ export default function ReplyForm({ inquiryId, authorId }: Props) {
     setLoading(true)
 
     const supabase = createClient()
-    await supabase.from('inquiry_replies').insert({
-      inquiry_id: inquiryId,
-      author_id: authorId,
-      content,
-    })
+    await supabase.from('inquiry_replies').insert({ inquiry_id: inquiryId, author_id: authorId, content })
 
     setContent('')
     setLoading(false)
@@ -37,7 +33,7 @@ export default function ReplyForm({ inquiryId, authorId }: Props) {
         onChange={(e) => setContent(e.target.value)}
         required
         rows={3}
-        placeholder="추가 메시지를 입력하세요..."
+        placeholder="Add a message..."
         className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
       />
       <button
@@ -45,7 +41,7 @@ export default function ReplyForm({ inquiryId, authorId }: Props) {
         disabled={loading}
         className="w-full bg-black text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
       >
-        {loading ? '전송 중...' : 'Send'}
+        {loading ? 'Sending...' : 'Send'}
       </button>
     </form>
   )

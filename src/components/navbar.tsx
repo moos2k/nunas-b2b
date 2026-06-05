@@ -37,10 +37,10 @@ export default function Navbar() {
   }
 
   const adminLinks: { href: string; label: string; exact?: boolean }[] = [
-    { href: '/admin', label: '대시보드', exact: true },
-    { href: '/admin/products', label: '상품 관리' },
-    { href: '/admin/orders', label: '주문 관리' },
-    { href: '/admin/inquiries', label: '문의 관리' },
+    { href: '/admin', label: 'Dashboard', exact: true },
+    { href: '/admin/products', label: 'Products' },
+    { href: '/admin/orders', label: 'Orders' },
+    { href: '/admin/inquiries', label: 'Inquiries' },
   ]
 
   const customerLinks: { href: string; label: string; exact?: boolean }[] = [

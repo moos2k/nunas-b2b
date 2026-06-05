@@ -4,13 +4,13 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 const STATUS_LABEL: Record<string, string> = {
-  submitted:  '📋 접수됨',
-  confirmed:  '✅ 확인됨',
-  invoiced:   '🧾 인보이스 발행',
-  paid:       '💰 입금 확인',
-  shipped:    '🚚 배송 중',
-  completed:  '🎉 완료',
-  cancelled:  '❌ 취소됨',
+  submitted:  '📋 Submitted',
+  confirmed:  '✅ Confirmed',
+  invoiced:   '🧾 Invoiced',
+  paid:       '💰 Payment Received',
+  shipped:    '🚚 Shipped',
+  completed:  '🎉 Completed',
+  cancelled:  '❌ Cancelled',
 }
 
 export default async function AdminOrdersPage() {
@@ -32,17 +32,17 @@ export default async function AdminOrdersPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold mb-8">주문 관리</h1>
+      <h1 className="text-2xl font-bold mb-8">Orders</h1>
 
       <div className="border rounded-lg overflow-hidden bg-white">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">주문번호</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">고객</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">상태</th>
-              <th className="text-right px-4 py-3 font-medium text-gray-600">금액</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">주문일</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Order #</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Customer</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
+              <th className="text-right px-4 py-3 font-medium text-gray-600">Amount</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Date</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
@@ -56,15 +56,15 @@ export default async function AdminOrdersPage() {
                   <td className="px-4 py-3">{profileMap[order.customer_id]?.company ?? profileMap[order.customer_id]?.full_name ?? '-'}</td>
                   <td className="px-4 py-3">{STATUS_LABEL[order.status]}</td>
                   <td className="px-4 py-3 text-right">{currency} {total.toFixed(2)}</td>
-                  <td className="px-4 py-3 text-gray-500">{new Date(order.created_at).toLocaleDateString('ko-KR')}</td>
+                  <td className="px-4 py-3 text-gray-500">{new Date(order.created_at).toLocaleDateString('en-US')}</td>
                   <td className="px-4 py-3 text-right">
-                    <Link href={`/admin/orders/${order.id}`} className="text-blue-500 hover:underline">상세</Link>
+                    <Link href={`/admin/orders/${order.id}`} className="text-blue-500 hover:underline">View</Link>
                   </td>
                 </tr>
               )
             })}
             {(!orders || orders.length === 0) && (
-              <tr><td colSpan={6} className="px-4 py-10 text-center text-gray-400">아직 주문이 없습니다.</td></tr>
+              <tr><td colSpan={6} className="px-4 py-10 text-center text-gray-400">No orders yet.</td></tr>
             )}
           </tbody>
         </table>
