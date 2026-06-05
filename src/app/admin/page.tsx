@@ -43,10 +43,13 @@ export default async function AdminPage() {
           <p className="text-sm text-gray-500">발주서 확인 및 상태 변경</p>
         </a>
 
-        <div className="border rounded-lg p-6 opacity-40 cursor-not-allowed">
-          <h2 className="text-lg font-semibold mb-1">고객 관리</h2>
-          <p className="text-sm text-gray-500">Phase 2에서 추가 예정</p>
-        </div>
+        <a
+          href="/admin/inquiries"
+          className="border rounded-lg p-6 hover:shadow-md transition-shadow"
+        >
+          <h2 className="text-lg font-semibold mb-1">문의 관리</h2>
+          <p className="text-sm text-gray-500">고객 문의 확인 및 답변</p>
+        </a>
       </div>
     </main>
   )
