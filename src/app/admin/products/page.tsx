@@ -1,44 +1,29 @@
 import { createClient } from '@/utils/supabase/server'
+import { getProfile } from '@/utils/supabase/queries'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 export default async function AdminProductsPage() {
   const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const [profile, { data: products }] = await Promise.all([
+    getProfile(),
+    supabase.from('products').select('*').order('created_at', { ascending: false }),
+  ])
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role !== 'admin') redirect('/products')
-
-  const { data: products } = await supabase
-    .from('products')
-    .select('*')
-    .order('created_at', { ascending: false })
+  if (!profile) redirect('/login')
+  if (profile.role !== 'admin') redirect('/products')
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
       <div className="flex justify-between items-center mb-8">
-        <div>
-          <Link href="/admin" className="text-sm text-gray-400 hover:underline">
-            ← 대시보드
-          </Link>
-          <h1 className="text-2xl font-bold mt-1">상품 관리</h1>
-        </div>
-        <Link
-          href="/admin/products/new"
-          className="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors"
-        >
+        <h1 className="text-2xl font-bold">상품 관리</h1>
+        <Link href="/admin/products/new" className="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors">
           + 상품 등록
         </Link>
       </div>
 
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border rounded-lg overflow-hidden bg-white">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
@@ -56,19 +41,10 @@ export default async function AdminProductsPage() {
                 <td className="px-4 py-3 font-medium">{product.name}</td>
                 <td className="px-4 py-3 text-gray-500">{product.category ?? '-'}</td>
                 <td className="px-4 py-3 text-gray-500">{product.sku ?? '-'}</td>
+                <td className="px-4 py-3 text-right">{product.currency} {Number(product.base_price).toFixed(2)}</td>
+                <td className="px-4 py-3 text-center">{product.is_active ? '✅' : '❌'}</td>
                 <td className="px-4 py-3 text-right">
-                  {product.currency} {Number(product.base_price).toFixed(2)}
-                </td>
-                <td className="px-4 py-3 text-center">
-                  {product.is_active ? '✅' : '❌'}
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <Link
-                    href={`/admin/products/${product.id}/edit`}
-                    className="text-blue-500 hover:underline"
-                  >
-                    수정
-                  </Link>
+                  <Link href={`/admin/products/${product.id}/edit`} className="text-blue-500 hover:underline">수정</Link>
                 </td>
               </tr>
             ))}
