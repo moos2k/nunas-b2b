@@ -36,14 +36,14 @@ export default function Navbar() {
     return active ? 'text-black font-semibold' : 'text-gray-500 hover:text-black'
   }
 
-  const adminLinks = [
+  const adminLinks: { href: string; label: string; exact?: boolean }[] = [
     { href: '/admin', label: '대시보드', exact: true },
     { href: '/admin/products', label: '상품 관리' },
     { href: '/admin/orders', label: '주문 관리' },
     { href: '/admin/inquiries', label: '문의 관리' },
   ]
 
-  const customerLinks = [
+  const customerLinks: { href: string; label: string; exact?: boolean }[] = [
     { href: '/products', label: 'Products' },
     { href: '/orders', label: 'My Orders' },
     { href: '/inquiries', label: 'Inquiries' },
