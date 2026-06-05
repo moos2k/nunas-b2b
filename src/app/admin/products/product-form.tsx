@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
+import Image from 'next/image'
 
 interface Product {
   id: string
@@ -15,11 +16,18 @@ interface Product {
   is_active: boolean
 }
 
-interface Props {
-  product?: Product
+interface ProductImage {
+  id: string
+  url: string
+  sort_order: number
 }
 
-export default function ProductForm({ product }: Props) {
+interface Props {
+  product?: Product
+  images?: ProductImage[]
+}
+
+export default function ProductForm({ product, images = [] }: Props) {
   const router = useRouter()
   const isEdit = !!product
 
@@ -32,8 +40,33 @@ export default function ProductForm({ product }: Props) {
     currency: product?.currency ?? 'USD',
     is_active: product?.is_active ?? true,
   })
+  const [existingImages, setExistingImages] = useState<ProductImage[]>(images)
+  const [newFiles, setNewFiles] = useState<File[]>([])
+  const [previews, setPreviews] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    setNewFiles((prev) => [...prev, ...files])
+    const newPreviews = files.map((f) => URL.createObjectURL(f))
+    setPreviews((prev) => [...prev, ...newPreviews])
+  }
+
+  const removeNewFile = (index: number) => {
+    setNewFiles((prev) => prev.filter((_, i) => i !== index))
+    setPreviews((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const removeExistingImage = async (imageId: string, url: string) => {
+    const supabase = createClient()
+    // Storage에서 파일 삭제
+    const path = url.split('/product-images/')[1]
+    if (path) await supabase.storage.from('product-images').remove([path])
+    // DB에서 삭제
+    await supabase.from('product_images').delete().eq('id', imageId)
+    setExistingImages((prev) => prev.filter((img) => img.id !== imageId))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,14 +84,38 @@ export default function ProductForm({ product }: Props) {
       is_active: form.is_active,
     }
 
-    const { error } = isEdit
-      ? await supabase.from('products').update(payload).eq('id', product.id)
-      : await supabase.from('products').insert(payload)
+    let productId = product?.id
 
-    if (error) {
-      setError('Failed to save: ' + error.message)
-      setLoading(false)
-      return
+    if (isEdit) {
+      const { error } = await supabase.from('products').update(payload).eq('id', product.id)
+      if (error) { setError('Failed to save: ' + error.message); setLoading(false); return }
+    } else {
+      const { data, error } = await supabase.from('products').insert(payload).select().single()
+      if (error || !data) { setError('Failed to save: ' + error?.message); setLoading(false); return }
+      productId = data.id
+    }
+
+    // 새 이미지 업로드
+    if (newFiles.length > 0 && productId) {
+      for (const file of newFiles) {
+        const ext = file.name.split('.').pop()
+        const path = `${productId}/${Date.now()}.${ext}`
+        const { data: uploadData } = await supabase.storage
+          .from('product-images')
+          .upload(path, file, { upsert: true })
+
+        if (uploadData) {
+          const { data: urlData } = supabase.storage
+            .from('product-images')
+            .getPublicUrl(uploadData.path)
+
+          await supabase.from('product_images').insert({
+            product_id: productId,
+            url: urlData.publicUrl,
+            sort_order: existingImages.length,
+          })
+        }
+      }
     }
 
     router.push('/admin/products')
@@ -140,6 +197,61 @@ export default function ProductForm({ product }: Props) {
             <option value="KRW">KRW</option>
           </select>
         </div>
+      </div>
+
+      {/* 이미지 업로드 */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
+
+        {/* 기존 이미지 */}
+        {existingImages.length > 0 && (
+          <div className="flex flex-wrap gap-3 mb-3">
+            {existingImages.map((img) => (
+              <div key={img.id} className="relative w-24 h-24">
+                <Image src={img.url} alt="product" fill className="object-cover rounded-lg border" />
+                <button
+                  type="button"
+                  onClick={() => removeExistingImage(img.id, img.url)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 새 이미지 미리보기 */}
+        {previews.length > 0 && (
+          <div className="flex flex-wrap gap-3 mb-3">
+            {previews.map((src, i) => (
+              <div key={i} className="relative w-24 h-24">
+                <Image src={src} alt="preview" fill className="object-cover rounded-lg border border-dashed border-gray-300" />
+                <button
+                  type="button"
+                  onClick={() => removeNewFile(i)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <label className="flex items-center gap-2 cursor-pointer w-fit border rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Add Images
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </label>
       </div>
 
       <div className="flex items-center gap-2">
