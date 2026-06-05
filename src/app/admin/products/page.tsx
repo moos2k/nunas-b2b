@@ -23,7 +23,7 @@ export default async function AdminProductsPage() {
         </Link>
       </div>
 
-      <div className="border rounded-lg overflow-hidden bg-white">
+      <div className="border rounded-lg overflow-hidden bg-white overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
