@@ -1,6 +1,5 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
-import LogoutButton from './logout-button'
 
 export default async function AdminPage() {
   const supabase = await createClient()
@@ -20,10 +19,7 @@ export default async function AdminPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-10">
-      <div className="flex justify-between items-center mb-2">
-        <h1 className="text-2xl font-bold">관리자 대시보드</h1>
-        <LogoutButton />
-      </div>
+      <h1 className="text-2xl font-bold mb-2">관리자 대시보드</h1>
       <p className="text-gray-500 mb-10">안녕하세요, {profile.full_name}님</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
