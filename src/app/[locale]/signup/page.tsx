@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase/client'
 import Link from 'next/link'
 
 const COUNTRIES = [
+  'South Korea',
   'Indonesia', 'Malaysia', 'Singapore', 'Thailand', 'Vietnam', 'Philippines',
   'China', 'Japan', 'Taiwan', 'Hong Kong', 'India', 'UAE', 'Saudi Arabia',
   'United States', 'United Kingdom', 'Australia', 'Other',
