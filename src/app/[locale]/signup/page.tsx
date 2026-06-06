@@ -55,6 +55,7 @@ export default function SignupPage() {
     })
 
     if (signUpError || !data.user) {
+      console.log('signup error detail:', JSON.stringify(signUpError))
       setError(signUpError?.message ?? (isKo ? '가입 중 오류가 발생했습니다.' : 'Failed to sign up.'))
       setLoading(false)
       return
@@ -142,102 +143,102 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* 로그인 정보 */}
           <div className="space-y-6">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-[#999] border-b border-[#e8e4de] pb-2">
+            <p className="text-xs font-semibold text-[#1a1a1a] uppercase tracking-widest border-b-2 border-[#1a1a1a] pb-2 mb-2">
               {isKo ? '로그인 정보' : 'Account Info'}
             </p>
             <div>
-              <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+              <label className="block text-sm font-medium text-[#374151] mb-2">
                 {isKo ? '이메일' : 'Email'} <span className="text-red-400">*</span>
               </label>
               <input type="email" required value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors" />
+                className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+                <label className="block text-sm font-medium text-[#374151] mb-2">
                   {isKo ? '비밀번호' : 'Password'} <span className="text-red-400">*</span>
                 </label>
                 <input type="password" required value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   placeholder={isKo ? '8자 이상' : 'Min. 8 characters'}
-                  className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors placeholder:text-[#ccc]" />
+                  className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors placeholder:text-[#bbb]" />
               </div>
               <div>
-                <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+                <label className="block text-sm font-medium text-[#374151] mb-2">
                   {isKo ? '비밀번호 확인' : 'Confirm Password'} <span className="text-red-400">*</span>
                 </label>
                 <input type="password" required value={form.passwordConfirm}
                   onChange={(e) => setForm({ ...form, passwordConfirm: e.target.value })}
-                  className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors" />
+                  className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors" />
               </div>
             </div>
           </div>
 
           {/* 사업자 정보 */}
           <div className="space-y-6">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-[#999] border-b border-[#e8e4de] pb-2">
+            <p className="text-xs font-semibold text-[#1a1a1a] uppercase tracking-widest border-b-2 border-[#1a1a1a] pb-2 mb-2">
               {isKo ? '사업자 정보' : 'Business Info'}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+                <label className="block text-sm font-medium text-[#374151] mb-2">
                   {isKo ? '담당자 이름' : 'Contact Name'} <span className="text-red-400">*</span>
                 </label>
                 <input type="text" required value={form.full_name}
                   onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-                  className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors" />
+                  className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors" />
               </div>
               <div>
-                <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+                <label className="block text-sm font-medium text-[#374151] mb-2">
                   {isKo ? '회사명' : 'Company Name'} <span className="text-red-400">*</span>
                 </label>
                 <input type="text" required value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
-                  className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors" />
+                  className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors" />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+                <label className="block text-sm font-medium text-[#374151] mb-2">
                   {isKo ? '국가' : 'Country'} <span className="text-red-400">*</span>
                 </label>
                 <select required value={form.country}
                   onChange={(e) => setForm({ ...form, country: e.target.value })}
-                  className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors">
+                  className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors">
                   <option value="">{isKo ? '선택' : 'Select'}</option>
                   {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+                <label className="block text-sm font-medium text-[#374151] mb-2">
                   {isKo ? '사업자 번호' : 'Business Reg. No.'}
                 </label>
                 <input type="text" value={form.business_number}
                   onChange={(e) => setForm({ ...form, business_number: e.target.value })}
-                  className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors" />
+                  className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors" />
               </div>
             </div>
             <div>
-              <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+              <label className="block text-sm font-medium text-[#374151] mb-2">
                 {isKo ? '연락처' : 'Phone Number'}
               </label>
               <input type="tel" value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 placeholder="+62 xxx xxxx xxxx"
-                className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors placeholder:text-[#ccc]" />
+                className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors placeholder:text-[#bbb]" />
             </div>
           </div>
 
           {/* 메시지 */}
           <div>
-            <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+            <label className="block text-sm font-medium text-[#374151] mb-2">
               {isKo ? '추가 메시지 (선택)' : 'Additional Message (optional)'}
             </label>
             <textarea value={form.message} rows={3}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               placeholder={isKo ? '관심 상품, 예상 주문량 등' : 'Products of interest, expected order volume, etc.'}
-              className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors resize-none placeholder:text-[#ccc]" />
+              className="w-full border border-[#d1d5db] bg-white rounded-lg px-3 py-2.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors resize-none placeholder:text-[#bbb]" />
           </div>
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
