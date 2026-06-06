@@ -59,7 +59,7 @@ export default async function Home() {
               Sign In
             </Link>
             <a
-              href="mailto:contact@nunas.com"
+              href="mailto:jay-on@naver.com"
               className="border border-[#1a1a1a] text-[#1a1a1a] px-8 py-3.5 text-sm tracking-wider uppercase hover:bg-[#1a1a1a] hover:text-white transition-all duration-300 text-center"
             >
               Request Access
@@ -135,7 +135,7 @@ export default async function Home() {
             Sign In
           </Link>
           <a
-            href="mailto:contact@nunas.com"
+            href="mailto:jay-on@naver.com"
             className="border border-[#1a1a1a] text-[#1a1a1a] px-10 py-3.5 text-sm tracking-wider uppercase hover:bg-[#1a1a1a] hover:text-white transition-all duration-300"
           >
             Request Access
@@ -153,8 +153,8 @@ export default async function Home() {
             Nunas
           </span>
           <p className="text-xs text-[#aaa]">© 2025 Nunas. All rights reserved.</p>
-          <a href="mailto:contact@nunas.com" className="text-xs text-[#888] hover:text-[#1a1a1a] transition-colors">
-            contact@nunas.com
+          <a href="mailto:jay-on@naver.com" className="text-xs text-[#888] hover:text-[#1a1a1a] transition-colors">
+            jay-on@naver.com
           </a>
         </div>
       </footer>
