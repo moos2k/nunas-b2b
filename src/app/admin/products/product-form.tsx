@@ -60,10 +60,8 @@ export default function ProductForm({ product, images = [] }: Props) {
 
   const removeExistingImage = async (imageId: string, url: string) => {
     const supabase = createClient()
-    // Storage에서 파일 삭제
-    const path = url.split('/product-images/')[1]
-    if (path) await supabase.storage.from('product-images').remove([path])
-    // DB에서 삭제
+    const path = url.split('/product-image/')[1]
+    if (path) await supabase.storage.from('product-image').remove([path])
     await supabase.from('product_images').delete().eq('id', imageId)
     setExistingImages((prev) => prev.filter((img) => img.id !== imageId))
   }
@@ -95,25 +93,38 @@ export default function ProductForm({ product, images = [] }: Props) {
       productId = data.id
     }
 
-    // 새 이미지 업로드
     if (newFiles.length > 0 && productId) {
       for (const file of newFiles) {
-        const ext = file.name.split('.').pop()
+        const rawExt = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
+        const ext = rawExt === 'jfif' ? 'jpg' : rawExt
         const path = `${productId}/${Date.now()}.${ext}`
-        const { data: uploadData } = await supabase.storage
-          .from('product-images')
-          .upload(path, file, { upsert: true })
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('product-image')
+          .upload(path, file, { upsert: true, contentType: 'image/jpeg' })
+
+        if (uploadError) {
+          setError('Image upload failed: ' + uploadError.message)
+          setLoading(false)
+          return
+        }
 
         if (uploadData) {
           const { data: urlData } = supabase.storage
-            .from('product-images')
+            .from('product-image')
             .getPublicUrl(uploadData.path)
 
-          await supabase.from('product_images').insert({
+          const { error: dbError } = await supabase.from('product_images').insert({
             product_id: productId,
             url: urlData.publicUrl,
             sort_order: existingImages.length,
           })
+
+          if (dbError) {
+            setError('Failed to save image record: ' + dbError.message)
+            setLoading(false)
+            return
+          }
         }
       }
     }
@@ -199,11 +210,10 @@ export default function ProductForm({ product, images = [] }: Props) {
         </div>
       </div>
 
-      {/* 이미지 업로드 */}
+      {/* Images */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
 
-        {/* 기존 이미지 */}
         {existingImages.length > 0 && (
           <div className="flex flex-wrap gap-3 mb-3">
             {existingImages.map((img) => (
@@ -214,14 +224,13 @@ export default function ProductForm({ product, images = [] }: Props) {
                   onClick={() => removeExistingImage(img.id, img.url)}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
                 >
-                  ×
+                  x
                 </button>
               </div>
             ))}
           </div>
         )}
 
-        {/* 새 이미지 미리보기 */}
         {previews.length > 0 && (
           <div className="flex flex-wrap gap-3 mb-3">
             {previews.map((src, i) => (
@@ -232,7 +241,7 @@ export default function ProductForm({ product, images = [] }: Props) {
                   onClick={() => removeNewFile(i)}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
                 >
-                  ×
+                  x
                 </button>
               </div>
             ))}
@@ -244,13 +253,7 @@ export default function ProductForm({ product, images = [] }: Props) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
           Add Images
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileChange}
-            className="hidden"
-          />
+          <input type="file" accept="image/*" multiple onChange={handleFileChange} className="hidden" />
         </label>
       </div>
 
