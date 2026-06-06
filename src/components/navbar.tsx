@@ -34,6 +34,9 @@ export default function Navbar() {
   // 페이지 이동 시 메뉴 닫기
   useEffect(() => { setMenuOpen(false) }, [pathname])
 
+  // 랜딩 페이지에선 숨김
+  if (pathname === '/') return null
+
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
