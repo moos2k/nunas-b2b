@@ -20,54 +20,57 @@ export default async function ProductsPage() {
   if (error) return <p>Failed to load products.</p>
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-16">
+    <main className="max-w-6xl mx-auto px-6 py-12">
       {/* 헤더 */}
-      <div className="mb-16 text-center">
-        <p className="text-xs tracking-[0.3em] uppercase text-[#888] mb-4">Collection</p>
+      <div className="mb-10 border-b border-[#e8e4de] pb-6">
         <h1
-          className="text-5xl font-light text-[#1a1a1a]"
+          className="text-4xl font-light text-[#1a1a1a]"
           style={{ fontFamily: 'var(--font-cormorant)' }}
         >
-          Our Products
+          Products
         </h1>
+        <p className="text-sm text-[#666] mt-1">{products.length} items</p>
       </div>
 
       {/* 상품 그리드 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
         {products.map((product) => {
           const firstImage = product.product_images?.[0]
           return (
             <Link key={product.id} href={`/products/${product.id}`} className="group">
-              {/* 이미지 영역 */}
-              <div className="aspect-square bg-[#F0EDE8] mb-5 overflow-hidden relative">
+              {/* 이미지 */}
+              <div className="aspect-square bg-[#F0EDE8] mb-4 overflow-hidden relative">
                 {firstImage ? (
                   <Image
                     src={firstImage.url}
                     alt={product.name}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-[#ccc] text-xs tracking-widest uppercase">No Image</span>
+                    <span className="text-[#bbb] text-xs tracking-widest uppercase">No Image</span>
                   </div>
                 )}
               </div>
 
-              {/* 텍스트 */}
+              {/* 정보 */}
               <div>
                 {product.category && (
-                  <p className="text-[10px] tracking-[0.25em] uppercase text-[#888] mb-1">
+                  <p className="text-[11px] tracking-widest uppercase text-[#999] mb-1">
                     {product.category}
                   </p>
                 )}
                 <h2
-                  className="text-xl font-light text-[#1a1a1a] mb-2 group-hover:opacity-60 transition-opacity"
+                  className="text-xl font-medium text-[#1a1a1a] mb-1 group-hover:opacity-70 transition-opacity"
                   style={{ fontFamily: 'var(--font-cormorant)' }}
                 >
                   {product.name}
                 </h2>
-                <p className="text-sm text-[#888]">
+                {product.sku && (
+                  <p className="text-xs text-[#999] mb-2">SKU: {product.sku}</p>
+                )}
+                <p className="text-base font-semibold text-[#1a1a1a]">
                   {product.currency} {Number(product.base_price).toFixed(2)}
                 </p>
               </div>
@@ -77,9 +80,7 @@ export default async function ProductsPage() {
       </div>
 
       {products.length === 0 && (
-        <p className="text-center text-[#aaa] py-20 tracking-widest text-sm uppercase">
-          No products available
-        </p>
+        <p className="text-center text-[#aaa] py-20 text-sm">No products available</p>
       )}
     </main>
   )

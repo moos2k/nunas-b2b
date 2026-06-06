@@ -56,29 +56,32 @@ export default function OrderButton({ productId, productName, unitPrice, currenc
   }
 
   return (
-    <div className="space-y-5">
-      {/* 수량 */}
-      <div>
-        <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
-          Quantity
-        </label>
-        <input
-          type="number"
-          min={1}
-          value={quantity}
-          onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-          className="w-24 border-b border-[#1a1a1a] bg-transparent px-0 py-2 text-sm focus:outline-none text-center"
-        />
+    <div className="space-y-5 border-t border-[#e8e4de] pt-6">
+      {/* 수량 + 소계 */}
+      <div className="flex items-end gap-6">
+        <div>
+          <label className="block text-xs font-medium text-[#1a1a1a] mb-2 uppercase tracking-wide">
+            Quantity
+          </label>
+          <input
+            type="number"
+            min={1}
+            value={quantity}
+            onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+            className="w-24 border border-[#e8e4de] rounded px-3 py-2 text-sm font-medium focus:outline-none focus:border-[#1a1a1a] transition-colors text-center"
+          />
+        </div>
+        <div className="pb-2">
+          <p className="text-xs text-[#888] uppercase tracking-wide mb-1">Subtotal</p>
+          <p className="text-xl font-semibold text-[#1a1a1a]">
+            {currency} {(unitPrice * quantity).toFixed(2)}
+          </p>
+        </div>
       </div>
-
-      {/* 소계 */}
-      <p className="text-xs text-[#888] tracking-widest uppercase">
-        Subtotal: {currency} {(unitPrice * quantity).toFixed(2)}
-      </p>
 
       {/* 메모 */}
       <div>
-        <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+        <label className="block text-xs font-medium text-[#1a1a1a] mb-2 uppercase tracking-wide">
           Note (optional)
         </label>
         <textarea
@@ -86,17 +89,17 @@ export default function OrderButton({ productId, productName, unitPrice, currenc
           onChange={(e) => setNote(e.target.value)}
           placeholder="Special requests or remarks"
           rows={2}
-          className="w-full border-b border-[#e8e4de] bg-transparent px-0 py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors resize-none placeholder:text-[#ccc]"
+          className="w-full border border-[#e8e4de] rounded px-3 py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors resize-none placeholder:text-[#ccc]"
         />
       </div>
 
-      {error && <p className="text-red-400 text-xs">{error}</p>}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       {/* 버튼 */}
       <button
         onClick={handleOrder}
         disabled={loading}
-        className="w-full border border-[#1a1a1a] text-[#1a1a1a] py-3 text-xs tracking-[0.3em] uppercase hover:bg-[#1a1a1a] hover:text-[#FAF9F7] transition-all duration-300 disabled:opacity-40"
+        className="w-full bg-[#1a1a1a] text-white py-3.5 text-sm font-medium tracking-wider uppercase hover:bg-[#333] transition-colors disabled:opacity-40"
       >
         {loading ? 'Processing...' : 'Submit Order'}
       </button>
