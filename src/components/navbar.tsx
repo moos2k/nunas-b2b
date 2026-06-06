@@ -13,11 +13,22 @@ export default function Navbar() {
 
   useEffect(() => {
     const supabase = createClient()
+
+    // 초기 로드
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) return
+      if (!session) { setProfile(null); return }
       supabase.from('profiles').select('id, role, full_name').eq('id', session.user.id).single()
         .then(({ data }) => setProfile(data))
     })
+
+    // 로그인/로그아웃 시 profile 갱신
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!session) { setProfile(null); return }
+      supabase.from('profiles').select('id, role, full_name').eq('id', session.user.id).single()
+        .then(({ data }) => setProfile(data))
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   // 페이지 이동 시 메뉴 닫기
