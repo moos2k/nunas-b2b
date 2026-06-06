@@ -36,39 +36,56 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white rounded-lg shadow p-8 w-full max-w-sm">
-        <h1 className="text-2xl font-bold mb-6 text-center">Nunas B2B</h1>
+    <main className="min-h-screen flex items-center justify-center bg-[#FAF9F7]">
+      <div className="w-full max-w-sm px-8">
+        {/* 로고 */}
+        <div className="text-center mb-14">
+          <h1
+            className="text-4xl font-light tracking-[0.3em] uppercase text-[#1a1a1a]"
+            style={{ fontFamily: 'var(--font-cormorant)' }}
+          >
+            Nunas
+          </h1>
+          <p className="text-[10px] tracking-[0.25em] uppercase text-[#888] mt-2">
+            B2B Platform
+          </p>
+        </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-8">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-3">
+              Email
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-3">
+              Password
+            </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors"
             />
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && (
+            <p className="text-red-400 text-xs tracking-wide text-center">{error}</p>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
+            className="w-full border border-[#1a1a1a] text-[#1a1a1a] py-3 text-xs tracking-[0.3em] uppercase hover:bg-[#1a1a1a] hover:text-[#FAF9F7] transition-all duration-300 disabled:opacity-40 mt-4"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>

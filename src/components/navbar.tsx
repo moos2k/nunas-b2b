@@ -63,26 +63,34 @@ export default function Navbar() {
   const links = profile.role === 'admin' ? adminLinks : customerLinks
 
   return (
-    <nav className="border-b bg-white sticky top-0 z-10">
-      <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+    <nav className="border-b border-[#e8e4de] bg-[#FAF9F7] sticky top-0 z-10">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* 로고 */}
-        <Link href={profile.role === 'admin' ? '/admin' : '/products'} className="font-bold text-lg tracking-tight">
-          Nunas B2B
+        <Link
+          href={profile.role === 'admin' ? '/admin' : '/products'}
+          className="font-light tracking-[0.2em] uppercase text-sm"
+          style={{ fontFamily: 'var(--font-cormorant)', fontSize: '1.1rem', letterSpacing: '0.25em' }}
+        >
+          Nunas
         </Link>
 
         {/* 데스크톱 메뉴 */}
-        <div className="hidden md:flex items-center gap-6 text-sm">
+        <div className="hidden md:flex items-center gap-8 text-xs tracking-widest uppercase">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className={`transition-colors ${isActive(link.href, link.exact)}`}>
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`transition-colors ${isActive(link.href, link.exact) ? 'text-[#1a1a1a]' : 'text-[#888] hover:text-[#1a1a1a]'}`}
+            >
               {link.label}
             </Link>
           ))}
         </div>
 
         {/* 데스크톱 우측 */}
-        <div className="hidden md:flex items-center gap-4 text-sm">
-          <span className="text-gray-400">{profile.full_name}</span>
-          <button onClick={handleLogout} className="text-gray-400 hover:text-black transition-colors">
+        <div className="hidden md:flex items-center gap-6 text-xs tracking-widest uppercase">
+          <span className="text-[#aaa]">{profile.full_name}</span>
+          <button onClick={handleLogout} className="text-[#888] hover:text-[#1a1a1a] transition-colors">
             Logout
           </button>
         </div>

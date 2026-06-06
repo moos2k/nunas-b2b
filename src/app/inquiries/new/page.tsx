@@ -28,7 +28,7 @@ export default function NewInquiryPage() {
       .single()
 
     if (error || !data) {
-      setError('문의 등록 중 오류가 발생했습니다.')
+      setError('Failed to submit inquiry.')
       setLoading(false)
       return
     }
@@ -37,47 +37,53 @@ export default function NewInquiryPage() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-10">
-      <Link href="/inquiries" className="text-sm text-gray-400 hover:underline mb-6 block">
-        ← Back to Inquiries
+    <main className="max-w-2xl mx-auto px-6 py-16">
+      <Link href="/inquiries" className="text-[10px] tracking-[0.2em] uppercase text-[#888] hover:text-[#1a1a1a] transition-colors mb-12 block">
+        ← Inquiries
       </Link>
-      <h1 className="text-2xl font-bold mb-8">New Inquiry</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="mb-10">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-[#888] mb-3">Support</p>
+        <h1 className="text-4xl font-light" style={{ fontFamily: 'var(--font-cormorant)' }}>
+          New Inquiry
+        </h1>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-10">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title <span className="text-red-400">*</span>
+          <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-3">
+            Subject
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Content <span className="text-red-400">*</span>
+          <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-3">
+            Message
           </label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required
             rows={6}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors resize-none"
           />
         </div>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && <p className="text-red-400 text-xs">{error}</p>}
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-black text-white py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
+          className="w-full border border-[#1a1a1a] text-[#1a1a1a] py-3 text-[10px] tracking-[0.3em] uppercase hover:bg-[#1a1a1a] hover:text-[#FAF9F7] transition-all duration-300 disabled:opacity-40"
         >
-          {loading ? '제출 중...' : 'Submit'}
+          {loading ? 'Submitting...' : 'Submit'}
         </button>
       </form>
     </main>

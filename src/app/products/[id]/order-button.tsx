@@ -56,39 +56,47 @@ export default function OrderButton({ productId, productName, unitPrice, currenc
   }
 
   return (
-    <div className="mt-8 space-y-4">
+    <div className="space-y-5">
+      {/* 수량 */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+        <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+          Quantity
+        </label>
         <input
           type="number"
           min={1}
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-          className="w-32 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          className="w-24 border-b border-[#1a1a1a] bg-transparent px-0 py-2 text-sm focus:outline-none text-center"
         />
       </div>
 
+      {/* 소계 */}
+      <p className="text-xs text-[#888] tracking-widest uppercase">
+        Subtotal: {currency} {(unitPrice * quantity).toFixed(2)}
+      </p>
+
+      {/* 메모 */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Note (optional)</label>
+        <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-2">
+          Note (optional)
+        </label>
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Special requests, remarks, etc."
+          placeholder="Special requests or remarks"
           rows={2}
-          className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          className="w-full border-b border-[#e8e4de] bg-transparent px-0 py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors resize-none placeholder:text-[#ccc]"
         />
       </div>
 
-      <div className="text-sm text-gray-500">
-        Subtotal: {currency} {(unitPrice * quantity).toFixed(2)}
-      </div>
+      {error && <p className="text-red-400 text-xs">{error}</p>}
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-
+      {/* 버튼 */}
       <button
         onClick={handleOrder}
         disabled={loading}
-        className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
+        className="w-full border border-[#1a1a1a] text-[#1a1a1a] py-3 text-xs tracking-[0.3em] uppercase hover:bg-[#1a1a1a] hover:text-[#FAF9F7] transition-all duration-300 disabled:opacity-40"
       >
         {loading ? 'Processing...' : 'Submit Order'}
       </button>
