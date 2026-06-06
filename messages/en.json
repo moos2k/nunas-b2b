@@ -1,0 +1,99 @@
+{
+  "nav": {
+    "products": "Products",
+    "myOrders": "My Orders",
+    "inquiries": "Inquiries",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "orders": "Orders"
+  },
+  "landing": {
+    "tagline": "Korean Cosmetics · B2B Platform",
+    "hero": "Premium Cosmetics for Global Buyers",
+    "heroItalic": "for Global Buyers",
+    "heroMain": "Premium Cosmetics",
+    "description": "We partner with select international buyers to bring Korea's finest cosmetics to the world. Browse our curated catalog, place orders, and manage your account — all in one place.",
+    "signIn": "Sign In",
+    "requestAccess": "Request Access",
+    "feature1Title": "Curated Selection",
+    "feature1Desc": "Hand-picked Korean skincare and cosmetics, sourced directly from trusted manufacturers.",
+    "feature2Title": "Simple Ordering",
+    "feature2Desc": "Browse products, submit orders, and track status — all through a clean, intuitive platform.",
+    "feature3Title": "Dedicated Support",
+    "feature3Desc": "Our team is here to help with product questions, pricing, and logistics at every step.",
+    "ctaTitle": "Ready to place your first order?",
+    "ctaDesc": "Already have an account? Sign in to browse our catalog and submit orders. New buyers can reach out to request access.",
+    "footer": "All rights reserved."
+  },
+  "login": {
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "error": "Invalid email or password."
+  },
+  "products": {
+    "title": "Products",
+    "items": "items",
+    "noImage": "No Image",
+    "noProducts": "No products available",
+    "back": "← Back to Products",
+    "unitPrice": "Unit Price",
+    "sku": "SKU"
+  },
+  "order": {
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "note": "Note (optional)",
+    "notePlaceholder": "Special requests or remarks",
+    "submit": "Submit Order",
+    "processing": "Processing...",
+    "errorCreate": "Failed to create order. Please try again.",
+    "errorItem": "Failed to add item. Please try again."
+  },
+  "orders": {
+    "title": "My Orders",
+    "noOrders": "No orders yet.",
+    "items": "item",
+    "itemsPlural": "items",
+    "back": "← Orders",
+    "orderConfirmation": "Order Confirmation",
+    "product": "Product",
+    "qty": "Qty",
+    "unitPrice": "Unit Price",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "note": "Note",
+    "nextSteps": "Next Steps",
+    "nextStepsDesc": "Your order has been received. Our team will review it and get back to you with a quotation shortly.",
+    "status": {
+      "submitted": "Submitted",
+      "confirmed": "Confirmed",
+      "invoiced": "Invoiced",
+      "paid": "Payment Received",
+      "shipped": "Shipped",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "inquiries": {
+    "title": "Inquiries",
+    "newInquiry": "New Inquiry",
+    "noInquiries": "No inquiries yet.",
+    "back": "← Inquiries",
+    "subject": "Subject",
+    "message": "Message",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "send": "Send",
+    "sending": "Sending...",
+    "addMessage": "Add a message...",
+    "support": "Support",
+    "you": "You",
+    "status": {
+      "open": "Open",
+      "answered": "Answered",
+      "closed": "Closed"
+    }
+  }
+}

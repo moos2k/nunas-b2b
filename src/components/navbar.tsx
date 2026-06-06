@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState } from 'react'
+import LocaleSwitcher from './locale-switcher'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -11,56 +12,51 @@ export default function Navbar() {
   const [profile, setProfile] = useState<{ id: string; role: string; full_name: string | null } | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
 
+  // pathname에서 locale 추출 (/en/products → en)
+  const locale = pathname.split('/')[1] || 'en'
+
   useEffect(() => {
     const supabase = createClient()
-
-    // 초기 로드
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) { setProfile(null); return }
       supabase.from('profiles').select('id, role, full_name').eq('id', session.user.id).single()
         .then(({ data }) => setProfile(data))
     })
-
-    // 로그인/로그아웃 시 profile 갱신
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) { setProfile(null); return }
       supabase.from('profiles').select('id, role, full_name').eq('id', session.user.id).single()
         .then(({ data }) => setProfile(data))
     })
-
     return () => subscription.unsubscribe()
   }, [])
 
-  // 페이지 이동 시 메뉴 닫기
   useEffect(() => { setMenuOpen(false) }, [pathname])
-
-  // 랜딩 페이지에선 숨김
-  if (pathname === '/') return null
 
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/login')
+    router.push(`/${locale}/login`)
   }
 
-  if (!profile) return null
+  // 랜딩 페이지에선 숨김
+  if (pathname === '/' || pathname === `/${locale}` || !profile) return null
 
   const isActive = (href: string, exact = false) => {
     const active = exact ? pathname === href : pathname.startsWith(href)
-    return active ? 'text-black font-semibold' : 'text-gray-500 hover:text-black'
+    return active ? 'text-[#1a1a1a] font-semibold' : 'text-[#888] hover:text-[#1a1a1a]'
   }
 
   const adminLinks: { href: string; label: string; exact?: boolean }[] = [
-    { href: '/admin', label: 'Dashboard', exact: true },
-    { href: '/admin/products', label: 'Products' },
-    { href: '/admin/orders', label: 'Orders' },
-    { href: '/admin/inquiries', label: 'Inquiries' },
+    { href: `/${locale}/admin`, label: 'Dashboard', exact: true },
+    { href: `/${locale}/admin/products`, label: 'Products' },
+    { href: `/${locale}/admin/orders`, label: 'Orders' },
+    { href: `/${locale}/admin/inquiries`, label: 'Inquiries' },
   ]
 
   const customerLinks: { href: string; label: string; exact?: boolean }[] = [
-    { href: '/products', label: 'Products' },
-    { href: '/orders', label: 'My Orders' },
-    { href: '/inquiries', label: 'Inquiries' },
+    { href: `/${locale}/products`, label: locale === 'ko' ? '상품' : 'Products' },
+    { href: `/${locale}/orders`, label: locale === 'ko' ? '내 주문' : 'My Orders' },
+    { href: `/${locale}/inquiries`, label: locale === 'ko' ? '문의' : 'Inquiries' },
   ]
 
   const links = profile.role === 'admin' ? adminLinks : customerLinks
@@ -68,42 +64,29 @@ export default function Navbar() {
   return (
     <nav className="border-b border-[#e8e4de] bg-[#FAF9F7] sticky top-0 z-10">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* 로고 */}
-        <Link
-          href={profile.role === 'admin' ? '/admin' : '/products'}
+        <Link href={profile.role === 'admin' ? `/${locale}/admin` : `/${locale}/products`}
           className="font-light tracking-[0.2em] uppercase text-sm"
-          style={{ fontFamily: 'var(--font-cormorant)', fontSize: '1.1rem', letterSpacing: '0.25em' }}
-        >
+          style={{ fontFamily: 'var(--font-cormorant)', fontSize: '1.1rem', letterSpacing: '0.25em' }}>
           Nunas
         </Link>
 
-        {/* 데스크톱 메뉴 */}
         <div className="hidden md:flex items-center gap-8 text-xs tracking-widest uppercase">
           {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`transition-colors ${isActive(link.href, link.exact) ? 'text-[#1a1a1a]' : 'text-[#888] hover:text-[#1a1a1a]'}`}
-            >
+            <Link key={link.href} href={link.href} className={`transition-colors ${isActive(link.href, link.exact)}`}>
               {link.label}
             </Link>
           ))}
         </div>
 
-        {/* 데스크톱 우측 */}
         <div className="hidden md:flex items-center gap-6 text-xs tracking-widest uppercase">
+          <LocaleSwitcher />
           <span className="text-[#aaa]">{profile.full_name}</span>
           <button onClick={handleLogout} className="text-[#888] hover:text-[#1a1a1a] transition-colors">
-            Logout
+            {locale === 'ko' ? '로그아웃' : 'Logout'}
           </button>
         </div>
 
-        {/* 모바일 햄버거 버튼 */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 text-gray-500 hover:text-black"
-          aria-label="Toggle menu"
-        >
+        <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-gray-500 hover:text-black" aria-label="Toggle menu">
           {menuOpen ? (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -116,22 +99,20 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* 모바일 드롭다운 메뉴 */}
       {menuOpen && (
-        <div className="md:hidden border-t bg-white px-4 py-3 space-y-1">
+        <div className="md:hidden border-t bg-[#FAF9F7] px-6 py-3 space-y-1">
           {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`block py-2 text-sm transition-colors ${isActive(link.href, link.exact)}`}
-            >
+            <Link key={link.href} href={link.href} className={`block py-2 text-sm transition-colors ${isActive(link.href, link.exact)}`}>
               {link.label}
             </Link>
           ))}
           <div className="border-t pt-3 mt-2 flex items-center justify-between">
-            <span className="text-sm text-gray-400">{profile.full_name}</span>
-            <button onClick={handleLogout} className="text-sm text-gray-400 hover:text-black transition-colors">
-              Logout
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-[#aaa]">{profile.full_name}</span>
+              <LocaleSwitcher />
+            </div>
+            <button onClick={handleLogout} className="text-sm text-[#888] hover:text-[#1a1a1a] transition-colors">
+              {locale === 'ko' ? '로그아웃' : 'Logout'}
             </button>
           </div>
         </div>
