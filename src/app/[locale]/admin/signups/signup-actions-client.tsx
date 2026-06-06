@@ -6,49 +6,34 @@ import { approveSignup, rejectSignup } from './actions'
 interface Props {
   requestId: string
   email: string
-  fullName: string
-  company: string
-  country: string
 }
 
-export default function SignupActionsClient({ requestId, email, fullName, company, country }: Props) {
+export default function SignupActionsClient({ requestId, email }: Props) {
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<{ tempPassword?: string; rejected?: boolean } | null>(null)
+  const [result, setResult] = useState<'approved' | 'rejected' | null>(null)
 
   const handleApprove = async () => {
     if (!confirm(`Approve ${email}?`)) return
     setLoading(true)
-    const res = await approveSignup(requestId, email, fullName, company, country)
+    const res = await approveSignup(requestId, email)
     setLoading(false)
     if (res.error) {
       alert('Error: ' + res.error)
     } else {
-      setResult({ tempPassword: res.tempPassword })
+      setResult('approved')
     }
   }
 
   const handleReject = async () => {
     if (!confirm(`Reject ${email}?`)) return
     setLoading(true)
-    await rejectSignup(requestId)
+    await rejectSignup(requestId, email)
     setLoading(false)
-    setResult({ rejected: true })
+    setResult('rejected')
   }
 
-  if (result?.rejected) {
-    return <span className="text-xs text-red-500">Rejected</span>
-  }
-
-  if (result?.tempPassword) {
-    return (
-      <div className="text-xs bg-green-50 border border-green-200 rounded p-2 max-w-xs">
-        <p className="font-medium text-green-700 mb-1">✅ Approved</p>
-        <p className="text-green-600">Temp password:</p>
-        <p className="font-mono font-bold text-green-800">{result.tempPassword}</p>
-        <p className="text-green-500 mt-1">Share with the buyer securely.</p>
-      </div>
-    )
-  }
+  if (result === 'approved') return <span className="text-xs text-green-600 font-medium">✅ Approved</span>
+  if (result === 'rejected') return <span className="text-xs text-red-500">❌ Rejected</span>
 
   return (
     <div className="flex gap-2">

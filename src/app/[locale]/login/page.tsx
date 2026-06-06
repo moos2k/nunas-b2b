@@ -9,6 +9,7 @@ export default function LoginPage() {
   const router = useRouter()
   const { locale } = useParams<{ locale: string }>()
   const t = useTranslations('login')
+  const isKo = locale === 'ko'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -29,7 +30,17 @@ export default function LoginPage() {
     }
 
     const { data: profile } = await supabase
-      .from('profiles').select('role').eq('id', data.user.id).single()
+      .from('profiles').select('role, status').eq('id', data.user.id).single()
+
+    // 승인 대기 중인 계정
+    if (profile?.status === 'pending') {
+      await supabase.auth.signOut()
+      setError(isKo
+        ? '가입 신청이 검토 중입니다. 승인 후 로그인하실 수 있습니다.'
+        : 'Your application is under review. You will be able to log in once approved.')
+      setLoading(false)
+      return
+    }
 
     if (profile?.role === 'admin') {
       router.push(`/${locale}/admin`)

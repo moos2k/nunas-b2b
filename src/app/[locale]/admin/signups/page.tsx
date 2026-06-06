@@ -76,9 +76,6 @@ export default async function AdminSignupsPage({ params }: { params: Promise<{ l
                     <SignupActionsClient
                       requestId={req.id}
                       email={req.email}
-                      fullName={req.full_name}
-                      company={req.company}
-                      country={req.country}
                     />
                   ) : (
                     <span className="text-xs text-gray-300">{req.status}</span>

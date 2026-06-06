@@ -48,7 +48,36 @@ export default function SignupPage() {
     setLoading(true)
     const supabase = createClient()
 
-    const { error } = await supabase.from('signup_requests').insert({
+    // 1. Supabase Auth 계정 생성
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email: form.email,
+      password: form.password,
+    })
+
+    if (signUpError || !data.user) {
+      setError(signUpError?.message ?? (isKo ? '가입 중 오류가 발생했습니다.' : 'Failed to sign up.'))
+      setLoading(false)
+      return
+    }
+
+    // 2. profiles 테이블에 pending 상태로 등록
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: data.user.id,
+      role: 'customer',
+      status: 'pending',
+      full_name: form.full_name,
+      company: form.company,
+      country: form.country,
+    })
+
+    if (profileError) {
+      setError(isKo ? '프로필 등록 중 오류가 발생했습니다.' : 'Failed to save profile.')
+      setLoading(false)
+      return
+    }
+
+    // 3. signup_requests에도 상세 정보 저장 (관리자 참고용)
+    await supabase.from('signup_requests').insert({
       email: form.email,
       full_name: form.full_name,
       company: form.company,
@@ -58,18 +87,9 @@ export default function SignupPage() {
       message: form.message || null,
     })
 
-    if (error) {
-      if (error.code === '23505') {
-        setError(isKo ? '이미 신청된 이메일입니다.' : 'This email has already been submitted.')
-      } else {
-        setError(isKo ? '신청 중 오류가 발생했습니다.' : 'Failed to submit. Please try again.')
-      }
-      setLoading(false)
-      return
-    }
+    // 4. 로그아웃 상태로 유지 (승인 전까지 접근 불가)
+    await supabase.auth.signOut()
 
-    // 비밀번호는 별도로 로컬스토리지에 임시 저장 (승인 시 사용)
-    // 실제로는 서버에서 처리해야 하나, MVP에서는 관리자가 직접 비밀번호 설정
     setDone(true)
     setLoading(false)
   }
@@ -88,11 +108,11 @@ export default function SignupPage() {
           </h1>
           <p className="text-sm text-[#666] leading-relaxed mb-8">
             {isKo
-              ? '가입 신청이 접수되었습니다. 담당자 검토 후 승인 이메일을 보내드리겠습니다.'
-              : 'Your application has been received. We will review it and notify you by email once approved.'}
+              ? '가입 신청이 접수되었습니다. 담당자 검토 후 승인 안내를 드리겠습니다. 승인 후 동일한 이메일과 비밀번호로 로그인하실 수 있습니다.'
+              : 'Your application has been received. We will review it and notify you once approved. You can then log in with the email and password you just entered.'}
           </p>
-          <Link href={`/${locale}`} className="text-sm text-[#888] hover:text-[#1a1a1a] transition-colors">
-            {isKo ? '홈으로 돌아가기' : 'Back to Home'} →
+          <Link href={`/${locale}/login`} className="text-sm text-[#1a1a1a] hover:underline">
+            {isKo ? '로그인 페이지로 →' : 'Go to Login →'}
           </Link>
         </div>
       </main>
