@@ -17,6 +17,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   }
 
   const t = await getTranslations('landing')
+  const isKo = locale === 'ko'
 
   return (
     <main className="min-h-screen bg-[#FAF9F7]">
@@ -45,9 +46,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <Link href={`/${locale}/login`} className="bg-[#1a1a1a] text-white px-8 py-3.5 text-sm tracking-wider uppercase hover:bg-[#333] transition-colors text-center">
               {t('signIn')}
             </Link>
-            <a href="mailto:jay-on@naver.com" className="border border-[#1a1a1a] text-[#1a1a1a] px-8 py-3.5 text-sm tracking-wider uppercase hover:bg-[#1a1a1a] hover:text-white transition-all duration-300 text-center">
-              {t('requestAccess')}
-            </a>
+            <Link href={`/${locale}/signup`} className="border border-[#1a1a1a] text-[#1a1a1a] px-8 py-3.5 text-sm tracking-wider uppercase hover:bg-[#1a1a1a] hover:text-white transition-all duration-300 text-center">
+              {isKo ? '회원가입' : 'Sign Up'}
+            </Link>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -81,9 +82,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <Link href={`/${locale}/login`} className="bg-[#1a1a1a] text-white px-10 py-3.5 text-sm tracking-wider uppercase hover:bg-[#333] transition-colors">
             {t('signIn')}
           </Link>
-          <a href="mailto:jay-on@naver.com" className="border border-[#1a1a1a] text-[#1a1a1a] px-10 py-3.5 text-sm tracking-wider uppercase hover:bg-[#1a1a1a] hover:text-white transition-all duration-300">
-            {t('requestAccess')}
-          </a>
+          <Link href={`/${locale}/signup`} className="border border-[#1a1a1a] text-[#1a1a1a] px-10 py-3.5 text-sm tracking-wider uppercase hover:bg-[#1a1a1a] hover:text-white transition-all duration-300">
+            {isKo ? '회원가입' : 'Sign Up'}
+          </Link>
         </div>
       </section>
 

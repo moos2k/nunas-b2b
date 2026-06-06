@@ -26,6 +26,10 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
           <h2 className="text-lg font-semibold mb-1">Inquiries</h2>
           <p className="text-sm text-gray-500">Respond to customer inquiries</p>
         </Link>
+        <Link href={`/${locale}/admin/signups`} className="border rounded-lg p-6 hover:shadow-md transition-shadow bg-white">
+          <h2 className="text-lg font-semibold mb-1">Sign-up Requests</h2>
+          <p className="text-sm text-gray-500">Review and approve new buyer applications</p>
+        </Link>
       </div>
     </main>
   )
