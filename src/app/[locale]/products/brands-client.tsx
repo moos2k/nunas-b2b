@@ -1,0 +1,122 @@
+'use client'
+
+import { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+
+interface Brand {
+  id: string
+  name: string
+  description: string | null
+  sku: string | null
+  order_schedule: string | null
+  delivery_info: string | null
+  price_list_url: string | null
+  product_images: { id: string; url: string }[]
+}
+
+interface Props {
+  brands: Brand[]
+  locale: string
+  isKo: boolean
+}
+
+export default function BrandsClient({ brands, locale, isKo }: Props) {
+  const [query, setQuery] = useState('')
+
+  const filtered = brands.filter((b) =>
+    b.name.toLowerCase().includes(query.toLowerCase()) ||
+    (b.description ?? '').toLowerCase().includes(query.toLowerCase())
+  )
+
+  return (
+    <>
+      {/* 검색창 */}
+      <div className="relative mb-10">
+        <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#aaa]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+        </svg>
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={isKo ? '브랜드 검색...' : 'Search brands...'}
+          className="w-full max-w-md border border-[#e8e4de] bg-white rounded-lg pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#1a1a1a] focus:ring-1 focus:ring-[#1a1a1a] transition-colors"
+        />
+      </div>
+
+      {/* 브랜드 그리드 */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filtered.map((brand) => {
+          const logo = brand.product_images?.[0]
+          return (
+            <div key={brand.id} className="bg-white border border-[#e8e4de] rounded-xl p-6 flex flex-col gap-4 hover:shadow-md transition-shadow relative">
+
+              {/* 카드 전체 클릭 → 상세페이지 */}
+              <Link href={`/${locale}/products/${brand.id}`} className="absolute inset-0 rounded-xl" aria-label={brand.name} />
+
+              {/* 로고 + 브랜드명 */}
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-lg bg-[#F0EDE8] flex items-center justify-center overflow-hidden shrink-0 border border-[#e8e4de]">
+                  {logo ? (
+                    <Image src={logo.url} alt={brand.name} width={56} height={56} className="object-cover w-full h-full" />
+                  ) : (
+                    <svg className="w-6 h-6 text-[#ccc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  )}
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-[#1a1a1a] leading-tight">{brand.name}</h2>
+                  {brand.sku && <p className="text-xs text-[#999] mt-0.5">{brand.sku}</p>}
+                </div>
+              </div>
+
+              {/* 브랜드 설명 */}
+              {brand.description && (
+                <p className="text-sm text-[#666] leading-relaxed line-clamp-2">{brand.description}</p>
+              )}
+
+              {/* 주문/배송 정보 */}
+              {(brand.order_schedule || brand.delivery_info) && (
+                <p className="text-sm text-[#666]">
+                  {brand.order_schedule && <>Order : {brand.order_schedule}</>}
+                  {brand.order_schedule && brand.delivery_info && <span className="mx-1 text-[#ccc]">///</span>}
+                  {brand.delivery_info && <>delivery : {brand.delivery_info}</>}
+                </p>
+              )}
+
+              {/* 가격표 다운로드 버튼 */}
+              {brand.price_list_url ? (
+                <a
+                  href={brand.price_list_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative z-10 mt-auto flex items-center justify-center gap-2 w-full bg-[#1a1a1a] text-white text-sm py-2.5 rounded-lg hover:bg-[#333] transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  {isKo ? '가격표 보기' : 'Get Price List'}
+                </a>
+              ) : (
+                <div className="mt-auto flex items-center justify-center gap-2 w-full bg-[#f5f5f5] text-[#aaa] text-sm py-2.5 rounded-lg cursor-not-allowed">
+                  {isKo ? '가격표 준비 중' : 'Price List Coming Soon'}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      {filtered.length === 0 && (
+        <p className="text-center text-[#aaa] py-20 text-sm">
+          {query
+            ? (isKo ? `"${query}"에 대한 결과가 없습니다.` : `No results for "${query}".`)
+            : (isKo ? '등록된 브랜드가 없습니다.' : 'No brands available yet.')}
+        </p>
+      )}
+    </>
+  )
+}

@@ -54,7 +54,7 @@ export default function Navbar() {
   ]
 
   const customerLinks: { href: string; label: string; exact?: boolean }[] = [
-    { href: `/${locale}/products`, label: locale === 'ko' ? '상품' : 'Products' },
+    { href: `/${locale}/products`, label: locale === 'ko' ? '브랜드' : 'Brands' },
     { href: `/${locale}/orders`, label: locale === 'ko' ? '내 주문' : 'My Orders' },
     { href: `/${locale}/inquiries`, label: locale === 'ko' ? '문의' : 'Inquiries' },
   ]

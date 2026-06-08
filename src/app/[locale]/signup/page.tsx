@@ -55,7 +55,6 @@ export default function SignupPage() {
     })
 
     if (signUpError || !data.user) {
-      console.log('signup error detail:', JSON.stringify(signUpError))
       setError(signUpError?.message ?? (isKo ? '가입 중 오류가 발생했습니다.' : 'Failed to sign up.'))
       setLoading(false)
       return
