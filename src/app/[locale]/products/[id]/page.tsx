@@ -2,9 +2,9 @@ import { createClient } from '@/utils/supabase/server'
 import { getProfile } from '@/utils/supabase/queries'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
-import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import OrderButton from './order-button'
+import ImageGallery from './image-gallery'
 
 interface Props {
   params: Promise<{ locale: string; id: string }>
@@ -32,26 +32,7 @@ export default async function ProductDetailPage({ params }: Props) {
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div>
-          <div className="aspect-square bg-[#F0EDE8] relative overflow-hidden">
-            {images.length > 0 ? (
-              <Image src={images[0].url} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="text-[#bbb] text-xs tracking-widest uppercase">{t('noImage')}</span>
-              </div>
-            )}
-          </div>
-          {images.length > 1 && (
-            <div className="flex gap-2 mt-2">
-              {images.slice(1).map((img: any) => (
-                <div key={img.id} className="w-20 h-20 bg-[#F0EDE8] relative overflow-hidden">
-                  <Image src={img.url} alt={product.name} fill sizes="80px" className="object-cover" />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <ImageGallery images={images} alt={product.name} noImageLabel={t('noImage')} />
 
         <div>
           {product.category && (
