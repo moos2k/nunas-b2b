@@ -8,10 +8,15 @@ const intlMiddleware = createMiddleware(routing)
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // 정적 파일 및 API 제외
+  // 정적 파일·API·메타데이터 파일 제외 (로케일 prefix 붙으면 안 되는 경로들)
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
+    pathname === '/icon' ||
+    pathname === '/apple-icon' ||
+    pathname === '/manifest.webmanifest' ||
+    pathname === '/sitemap.xml' ||
+    pathname === '/robots.txt' ||
     pathname.includes('.')
   ) {
     return NextResponse.next()

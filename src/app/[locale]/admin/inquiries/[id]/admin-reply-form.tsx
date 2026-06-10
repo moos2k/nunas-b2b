@@ -23,20 +23,20 @@ export default function AdminReplyForm({ inquiryId, authorId, currentStatus }: {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3 border rounded-lg p-5 bg-white">
-      <h2 className="font-semibold text-sm text-gray-700">Write a Reply</h2>
+      <h2 className="font-semibold text-sm text-gray-700">답변 작성</h2>
       <textarea value={content} onChange={(e) => setContent(e.target.value)} required rows={4}
-        placeholder="Type your reply..."
+        placeholder="답변을 입력하세요..."
         className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black" />
       <div className="flex gap-3 items-center">
         <select value={status} onChange={(e) => setStatus(e.target.value)}
           className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black">
-          <option value="open">🔵 Open</option>
-          <option value="answered">✅ Answered</option>
-          <option value="closed">⬜ Closed</option>
+          <option value="open">🔵 답변 대기</option>
+          <option value="answered">✅ 답변 완료</option>
+          <option value="closed">⬜ 종료</option>
         </select>
         <button type="submit" disabled={loading}
           className="flex-1 bg-black text-white py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50">
-          {loading ? 'Sending...' : 'Send Reply'}
+          {loading ? '전송 중...' : '답변 전송'}
         </button>
       </div>
     </form>

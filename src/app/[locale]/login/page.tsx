@@ -50,41 +50,42 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#FAF9F7]">
-      <div className="w-full max-w-sm px-8">
-        <div className="text-center mb-14">
-          <h1 className="text-4xl font-light tracking-[0.3em] uppercase text-[#1a1a1a]" style={{ fontFamily: 'var(--font-cormorant)' }}>
-            Nunas
-          </h1>
-          <p className="text-[10px] tracking-[0.25em] uppercase text-[#888] mt-2">B2B Platform</p>
+    <main className="min-h-screen flex items-center justify-center bg-[#F8F9FA] px-6">
+      <div className="w-full max-w-sm bg-white border border-[#E2E8F0] rounded p-10">
+        <div className="text-center mb-12">
+          <p className="text-lg font-bold tracking-tight" style={{ fontFamily: 'var(--font-montserrat)', color: '#0F172A' }}>
+            JAY-ON
+          </p>
+          <p className="text-[10px] font-semibold tracking-[0.25em] uppercase text-[#76777d] mt-1">International</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-8">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-3">{t('email')}</label>
+            <label className="block text-xs font-semibold tracking-[0.1em] uppercase text-[#45464d] mb-2">{t('email')}</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors"
+              className="w-full border border-[#c6c6cd] bg-white px-3 py-2.5 text-sm rounded focus:outline-none focus:border-b-2 focus:border-b-[#0F172A] transition-colors"
             />
           </div>
           <div>
-            <label className="block text-[10px] tracking-[0.2em] uppercase text-[#888] mb-3">{t('password')}</label>
+            <label className="block text-xs font-semibold tracking-[0.1em] uppercase text-[#45464d] mb-2">{t('password')}</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border-b border-[#e8e4de] bg-transparent py-2 text-sm focus:outline-none focus:border-[#1a1a1a] transition-colors"
+              className="w-full border border-[#c6c6cd] bg-white px-3 py-2.5 text-sm rounded focus:outline-none focus:border-b-2 focus:border-b-[#0F172A] transition-colors"
             />
           </div>
-          {error && <p className="text-red-400 text-xs tracking-wide text-center">{error}</p>}
+          {error && <p className="text-[#ba1a1a] text-xs text-center">{error}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="w-full border border-[#1a1a1a] text-[#1a1a1a] py-3 text-xs tracking-[0.3em] uppercase hover:bg-[#1a1a1a] hover:text-[#FAF9F7] transition-all duration-300 disabled:opacity-40"
+            className="w-full text-white py-3 text-xs font-semibold tracking-[0.1em] uppercase rounded hover:opacity-90 transition-opacity disabled:opacity-40"
+            style={{ backgroundColor: '#0F172A' }}
           >
             {loading ? t('signingIn') : t('signIn')}
           </button>

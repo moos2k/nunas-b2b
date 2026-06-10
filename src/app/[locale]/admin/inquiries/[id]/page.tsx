@@ -26,11 +26,11 @@ export default async function AdminInquiryDetailPage({ params }: Props) {
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-10">
-      <Link href={`/${locale}/admin/inquiries`} className="text-sm text-gray-400 hover:underline mb-6 block">← Inquiries</Link>
+      <Link href={`/${locale}/admin/inquiries`} className="text-sm text-gray-400 hover:underline mb-6 block">← 문의 관리</Link>
       <p className="text-xs text-gray-400 mb-2">{customer?.company ?? customer?.full_name ?? '-'}</p>
       <div className="border rounded-lg p-6 mb-6 bg-white">
         <h1 className="text-xl font-bold mb-2">{inquiry.title}</h1>
-        <p className="text-xs text-gray-400 mb-4">{new Date(inquiry.created_at).toLocaleDateString('en-US')}</p>
+        <p className="text-xs text-gray-400 mb-4">{new Date(inquiry.created_at).toLocaleDateString('ko-KR')}</p>
         <p className="text-gray-700 whitespace-pre-wrap">{inquiry.content}</p>
       </div>
       {replies && replies.length > 0 && (
@@ -40,8 +40,8 @@ export default async function AdminInquiryDetailPage({ params }: Props) {
             return (
               <div key={reply.id} className={`rounded-lg p-5 ${isAdmin ? 'bg-blue-50 border border-blue-100' : 'bg-gray-50 border'}`}>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-semibold">{isAdmin ? '🏢 Support' : (reply.profiles as any)?.full_name ?? 'Customer'}</span>
-                  <span className="text-xs text-gray-400">{new Date(reply.created_at).toLocaleDateString('en-US')}</span>
+                  <span className="text-sm font-semibold">{isAdmin ? '🏢 담당자' : (reply.profiles as any)?.full_name ?? '고객'}</span>
+                  <span className="text-xs text-gray-400">{new Date(reply.created_at).toLocaleDateString('ko-KR')}</span>
                 </div>
                 <p className="text-sm text-gray-700 whitespace-pre-wrap">{reply.content}</p>
               </div>

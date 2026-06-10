@@ -21,13 +21,13 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
   if (error) return <p>Failed to load brands.</p>
 
   return (
-    <main className="max-w-6xl mx-auto px-6 py-12">
+    <main className="max-w-[1280px] mx-auto px-6 py-12">
       {/* 헤더 */}
-      <div className="mb-8 border-b border-[#e8e4de] pb-6">
-        <h1 className="text-4xl font-light text-[#1a1a1a]" style={{ fontFamily: 'var(--font-cormorant)' }}>
+      <div className="mb-8 border-b border-[#E2E8F0] pb-6">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ fontFamily: 'var(--font-montserrat)', color: '#0F172A' }}>
           {isKo ? '브랜드' : 'Brands'}
         </h1>
-        <p className="text-sm text-[#666] mt-1">
+        <p className="text-sm text-[#76777d] mt-1">
           {brands?.length ?? 0} {isKo ? '개 브랜드' : 'brands'}
         </p>
       </div>

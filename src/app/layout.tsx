@@ -1,6 +1,6 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
-import { Cormorant_Garamond } from 'next/font/google'
+import { Cormorant_Garamond, Montserrat, Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/navbar'
 
@@ -10,16 +10,30 @@ const cormorant = Cormorant_Garamond({
   weight: ['300', '400', '500', '600'],
   variable: '--font-cormorant',
 })
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-montserrat',
+})
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
-  title: 'Nunas B2B',
-  description: 'Cosmetics B2B Order Platform',
+  title: 'J.ON International',
+  description: 'Korean Cosmetics Wholesale Distribution Platform',
+}
+
+export const viewport: Viewport = {
+  themeColor: '#0B1120',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${cormorant.variable}`}>
-      <body className="min-h-screen flex flex-col bg-[#FAF9F7] text-[#1a1a1a]">
+    <html suppressHydrationWarning className={`${geist.variable} ${cormorant.variable} ${montserrat.variable} ${inter.variable}`}>
+      <body className="min-h-screen flex flex-col bg-[#F8F9FA] text-[#191c1d]" style={{ fontFamily: 'var(--font-inter)' }}>
         <Navbar />
         <div className="flex-1">{children}</div>
       </body>

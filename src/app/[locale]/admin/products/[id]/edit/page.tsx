@@ -22,8 +22,8 @@ export default async function EditProductPage({ params }: Props) {
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-10">
-      <Link href={`/${locale}/admin/products`} className="text-sm text-gray-400 hover:underline mb-6 block">← Products</Link>
-      <h1 className="text-2xl font-bold mb-8">Edit Product</h1>
+      <Link href={`/${locale}/admin/products`} className="text-sm text-gray-400 hover:underline mb-6 block">← 브랜드 · 상품</Link>
+      <h1 className="text-2xl font-bold mb-8">브랜드 수정</h1>
       <ProductForm product={product} images={images ?? []} />
     </main>
   )

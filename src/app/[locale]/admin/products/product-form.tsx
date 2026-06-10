@@ -268,7 +268,7 @@ export default function ProductForm({ product, images = [] }: Props) {
           <div className="flex flex-wrap gap-3 mb-3">
             {existingImages.map((img) => (
               <div key={img.id} className="relative w-24 h-24">
-                <Image src={img.url} alt="product" fill className="object-cover rounded-lg border" />
+                <Image src={img.url} alt="product" fill sizes="96px" className="object-cover rounded-lg border" />
                 <button
                   type="button"
                   onClick={() => removeExistingImage(img.id, img.url)}
@@ -285,7 +285,7 @@ export default function ProductForm({ product, images = [] }: Props) {
           <div className="flex flex-wrap gap-3 mb-3">
             {previews.map((src, i) => (
               <div key={i} className="relative w-24 h-24">
-                <Image src={src} alt="preview" fill className="object-cover rounded-lg border border-dashed border-gray-300" />
+                <Image src={src} alt="preview" fill sizes="96px" className="object-cover rounded-lg border border-dashed border-gray-300" />
                 <button
                   type="button"
                   onClick={() => removeNewFile(i)}

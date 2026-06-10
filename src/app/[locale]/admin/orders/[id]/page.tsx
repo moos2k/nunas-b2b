@@ -25,30 +25,30 @@ export default async function AdminOrderDetailPage({ params }: Props) {
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
-      <Link href={`/${locale}/admin/orders`} className="text-sm text-gray-400 hover:underline mb-6 block">← Orders</Link>
+      <Link href={`/${locale}/admin/orders`} className="text-sm text-gray-400 hover:underline mb-6 block">← 주문 관리</Link>
       <div className="flex justify-between items-start mb-8">
         <div>
-          <h1 className="text-2xl font-bold">Order Detail</h1>
+          <h1 className="text-2xl font-bold">주문 상세</h1>
           <p className="text-xs text-gray-400 mt-1">#{order.id.slice(0, 8).toUpperCase()}</p>
         </div>
         <StatusChanger orderId={order.id} currentStatus={order.status} />
       </div>
       <div className="border rounded-lg p-5 mb-6 bg-white">
-        <h2 className="font-semibold mb-3 text-gray-700">Customer</h2>
+        <h2 className="font-semibold mb-3 text-gray-700">고객 정보</h2>
         <div className="text-sm space-y-1 text-gray-600">
-          <p>Name: {customer?.full_name ?? '-'}</p>
-          <p>Company: {customer?.company ?? '-'}</p>
-          <p>Country: {customer?.country ?? '-'}</p>
+          <p>담당자: {customer?.full_name ?? '-'}</p>
+          <p>회사명: {customer?.company ?? '-'}</p>
+          <p>국가: {customer?.country ?? '-'}</p>
         </div>
       </div>
       <div className="border rounded-lg overflow-hidden mb-6 bg-white">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Product</th>
-              <th className="text-right px-4 py-3 font-medium text-gray-600">Qty</th>
-              <th className="text-right px-4 py-3 font-medium text-gray-600">Unit Price</th>
-              <th className="text-right px-4 py-3 font-medium text-gray-600">Subtotal</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">상품</th>
+              <th className="text-right px-4 py-3 font-medium text-gray-600">수량</th>
+              <th className="text-right px-4 py-3 font-medium text-gray-600">단가</th>
+              <th className="text-right px-4 py-3 font-medium text-gray-600">소계</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -66,7 +66,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </tbody>
           <tfoot>
             <tr className="border-t bg-gray-50">
-              <td colSpan={3} className="px-4 py-3 font-bold text-right">Total</td>
+              <td colSpan={3} className="px-4 py-3 font-bold text-right">합계</td>
               <td className="px-4 py-3 font-bold text-right">{currency} {total.toFixed(2)}</td>
             </tr>
           </tfoot>
@@ -74,7 +74,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
       </div>
       {order.note && (
         <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
-          <p className="font-medium mb-1">Note</p>
+          <p className="font-medium mb-1">메모</p>
           <p>{order.note}</p>
         </div>
       )}

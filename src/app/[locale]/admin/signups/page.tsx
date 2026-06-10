@@ -10,6 +10,10 @@ const STATUS_STYLE: Record<string, string> = {
   rejected: 'bg-red-50 text-red-700 border-red-200',
 }
 
+const STATUS_LABEL: Record<string, string> = {
+  pending: '대기', approved: '승인됨', rejected: '거절됨',
+}
+
 export default async function AdminSignupsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const supabase = await createClient()
@@ -27,12 +31,12 @@ export default async function AdminSignupsPage({ params }: { params: Promise<{ l
   return (
     <main className="max-w-6xl mx-auto px-4 py-10">
       <div className="mb-8">
-        <Link href={`/${locale}/admin`} className="text-sm text-gray-400 hover:underline">← Dashboard</Link>
+        <Link href={`/${locale}/admin`} className="text-sm text-gray-400 hover:underline">← 대시보드</Link>
         <div className="flex items-center gap-3 mt-1">
-          <h1 className="text-2xl font-bold">Sign-up Requests</h1>
+          <h1 className="text-2xl font-bold">가입 신청</h1>
           {pending > 0 && (
             <span className="bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded-full font-medium">
-              {pending} pending
+              대기 {pending}건
             </span>
           )}
         </div>
@@ -42,13 +46,13 @@ export default async function AdminSignupsPage({ params }: { params: Promise<{ l
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Applicant</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Company</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Country</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Business No.</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Phone</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Date</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">신청자</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">회사명</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">국가</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">사업자번호</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">연락처</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">신청일</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">상태</th>
               <th className="px-4 py-3"></th>
             </tr>
           </thead>
@@ -64,11 +68,11 @@ export default async function AdminSignupsPage({ params }: { params: Promise<{ l
                 <td className="px-4 py-3 text-gray-500">{req.business_number ?? '-'}</td>
                 <td className="px-4 py-3 text-gray-500">{req.phone ?? '-'}</td>
                 <td className="px-4 py-3 text-gray-400 text-xs">
-                  {new Date(req.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  {new Date(req.created_at).toLocaleDateString('ko-KR')}
                 </td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2 py-1 border rounded-full ${STATUS_STYLE[req.status]}`}>
-                    {req.status}
+                    {STATUS_LABEL[req.status] ?? req.status}
                   </span>
                 </td>
                 <td className="px-4 py-4">
@@ -78,14 +82,14 @@ export default async function AdminSignupsPage({ params }: { params: Promise<{ l
                       email={req.email}
                     />
                   ) : (
-                    <span className="text-xs text-gray-300">{req.status}</span>
+                    <span className="text-xs text-gray-300">{STATUS_LABEL[req.status] ?? req.status}</span>
                   )}
                 </td>
               </tr>
             ))}
             {(!requests || requests.length === 0) && (
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-gray-400">No applications yet.</td>
+                <td colSpan={8} className="px-4 py-10 text-center text-gray-400">가입 신청 내역이 없습니다.</td>
               </tr>
             )}
           </tbody>

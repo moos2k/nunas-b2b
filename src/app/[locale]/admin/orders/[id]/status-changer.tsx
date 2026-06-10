@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 
 const STATUS_OPTIONS = [
-  { value: 'submitted', label: '📋 Submitted' },
-  { value: 'confirmed', label: '✅ Confirmed' },
-  { value: 'invoiced',  label: '🧾 Invoiced' },
-  { value: 'paid',      label: '💰 Payment Received' },
-  { value: 'shipped',   label: '🚚 Shipped' },
-  { value: 'completed', label: '🎉 Completed' },
-  { value: 'cancelled', label: '❌ Cancelled' },
+  { value: 'submitted', label: '📋 접수됨' },
+  { value: 'confirmed', label: '✅ 확인됨' },
+  { value: 'invoiced',  label: '🧾 인보이스 발행' },
+  { value: 'paid',      label: '💰 입금 확인' },
+  { value: 'shipped',   label: '🚚 배송 중' },
+  { value: 'completed', label: '🎉 완료' },
+  { value: 'cancelled', label: '❌ 취소됨' },
 ]
 
 export default function StatusChanger({ orderId, currentStatus }: { orderId: string; currentStatus: string }) {
