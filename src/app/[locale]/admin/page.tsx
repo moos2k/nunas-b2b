@@ -1,10 +1,16 @@
+import { createClient } from '@/utils/supabase/server'
 import { getProfile } from '@/utils/supabase/queries'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 export default async function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  const profile = await getProfile()
+  const supabase = await createClient()
+
+  const [profile, { count: pendingSignups }] = await Promise.all([
+    getProfile(),
+    supabase.from('signup_requests').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+  ])
 
   if (!profile) redirect(`/${locale}/login`)
   if (profile.role !== 'admin') redirect(`/${locale}/products`)
@@ -26,8 +32,15 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
           <h2 className="text-lg font-semibold mb-1">문의 관리</h2>
           <p className="text-sm text-gray-500">고객 문의 답변</p>
         </Link>
-        <Link href={`/${locale}/admin/signups`} className="border rounded-lg p-6 hover:shadow-md transition-shadow bg-white">
-          <h2 className="text-lg font-semibold mb-1">가입 신청</h2>
+        <Link href={`/${locale}/admin/signups`} className="border rounded-lg p-6 hover:shadow-md transition-shadow bg-white relative">
+          <div className="flex items-center gap-2 mb-1">
+            <h2 className="text-lg font-semibold">가입 신청</h2>
+            {(pendingSignups ?? 0) > 0 && (
+              <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                {pendingSignups}
+              </span>
+            )}
+          </div>
           <p className="text-sm text-gray-500">신규 바이어 가입 신청 검토·승인</p>
         </Link>
       </div>
