@@ -76,14 +76,11 @@ export default async function AdminSignupsPage({ params }: { params: Promise<{ l
                   </span>
                 </td>
                 <td className="px-4 py-4">
-                  {req.status === 'pending' ? (
-                    <SignupActionsClient
-                      requestId={req.id}
-                      email={req.email}
-                    />
-                  ) : (
-                    <span className="text-xs text-gray-300">{STATUS_LABEL[req.status] ?? req.status}</span>
-                  )}
+                  <SignupActionsClient
+                    requestId={req.id}
+                    email={req.email}
+                    status={req.status}
+                  />
                 </td>
               </tr>
             ))}
