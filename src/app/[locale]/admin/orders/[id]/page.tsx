@@ -10,9 +10,10 @@ export default async function AdminOrderDetailPage({ params }: Props) {
   const { locale, id } = await params
   const supabase = await createClient()
 
-  const [profile, { data: order }] = await Promise.all([
+  const [profile, { data: order }, { data: orderFiles }] = await Promise.all([
     getProfile(),
     supabase.from('orders').select('*, order_items(*, products(name, sku))').eq('id', id).single(),
+    supabase.from('order_files').select('*').eq('order_id', id).order('created_at'),
   ])
 
   if (!profile) redirect(`/${locale}/login`)
@@ -41,6 +42,26 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           <p>국가: {customer?.country ?? '-'}</p>
         </div>
       </div>
+      {/* 첨부된 발주서 파일 */}
+      {orderFiles && orderFiles.length > 0 && (
+        <div className="border rounded-lg p-5 mb-6 bg-white">
+          <h2 className="font-semibold mb-3 text-gray-700">발주서 파일 ({orderFiles.length})</h2>
+          <div className="space-y-2">
+            {orderFiles.map((f) => (
+              <a key={f.id} href={`${f.url}?download=${encodeURIComponent(f.filename ?? 'order-sheet')}`}
+                className="flex items-center gap-3 p-3 bg-gray-50 border rounded-lg hover:border-gray-400 transition-colors">
+                <svg className="w-5 h-5 text-gray-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span className="text-sm flex-1 truncate">{f.filename ?? 'order-sheet'}</span>
+                <span className="text-xs text-blue-500 shrink-0">다운로드</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {order.order_items.length > 0 && (
       <div className="border rounded-lg overflow-hidden mb-6 bg-white">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
@@ -72,6 +93,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </tfoot>
         </table>
       </div>
+      )}
       {order.note && (
         <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
           <p className="font-medium mb-1">메모</p>

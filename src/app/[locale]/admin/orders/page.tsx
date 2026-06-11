@@ -53,7 +53,7 @@ export default async function AdminOrdersPage({ params }: { params: Promise<{ lo
                   <td className="px-4 py-3 font-mono text-xs">#{order.id.slice(0, 8).toUpperCase()}</td>
                   <td className="px-4 py-3">{profileMap[order.customer_id]?.company ?? profileMap[order.customer_id]?.full_name ?? '-'}</td>
                   <td className="px-4 py-3">{STATUS_LABEL[order.status]}</td>
-                  <td className="px-4 py-3 text-right">{currency} {total.toFixed(2)}</td>
+                  <td className="px-4 py-3 text-right">{order.order_items.length > 0 ? `${currency} ${total.toFixed(2)}` : '-'}</td>
                   <td className="px-4 py-3 text-gray-500">{new Date(order.created_at).toLocaleDateString('ko-KR')}</td>
                   <td className="px-4 py-3 text-right">
                     <Link href={`/${locale}/admin/orders/${order.id}`} className="text-blue-500 hover:underline">보기</Link>

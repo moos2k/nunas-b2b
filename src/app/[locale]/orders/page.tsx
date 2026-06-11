@@ -45,14 +45,14 @@ export default async function MyOrdersPage({ params }: { params: Promise<{ local
                     {new Date(order.created_at).toLocaleDateString(locale === 'ko' ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                   </p>
                 </div>
-                <p className="hidden sm:block text-xs text-[#888]">{itemCount}{t('items')}</p>
+                {itemCount > 0 && <p className="hidden sm:block text-xs text-[#888]">{itemCount}{t('items')}</p>}
               </div>
               <div className="flex items-center gap-4">
                 <span className={`text-xs px-3 py-1 border rounded-full ${STATUS_COLOR[order.status] ?? 'bg-gray-50 text-gray-600 border-gray-200'}`}>
                   {t(`status.${order.status}`)}
                 </span>
                 <p className="text-base font-semibold text-[#1a1a1a] min-w-[100px] text-right">
-                  {currency} {total.toFixed(2)}
+                  {order.order_items.length > 0 ? `${currency} ${total.toFixed(2)}` : '-'}
                 </p>
               </div>
             </Link>
