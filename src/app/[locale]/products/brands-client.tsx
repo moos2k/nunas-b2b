@@ -12,6 +12,7 @@ interface Brand {
   order_schedule: string | null
   delivery_info: string | null
   price_list_url: string | null
+  website_url: string | null
   product_images: { id: string; url: string }[]
 }
 
@@ -66,9 +67,20 @@ export default function BrandsClient({ brands, locale, isKo }: Props) {
                     </svg>
                   )}
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-lg font-bold leading-tight" style={{ fontFamily: 'var(--font-montserrat)', color: '#0F172A' }}>{brand.name}</h2>
-                  {brand.sku && <p className="text-xs text-[#76777d] mt-0.5">{brand.sku}</p>}
+                  <div className="flex items-center gap-2 mt-0.5">
+                    {brand.sku && <p className="text-xs text-[#76777d]">{brand.sku}</p>}
+                    {brand.website_url && (
+                      <a href={brand.website_url} target="_blank" rel="noopener noreferrer"
+                        className="relative z-10 inline-flex items-center gap-1 text-xs text-[#76777d] hover:text-[#0F172A] transition-colors">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        {isKo ? '공식 사이트' : 'Official Site'}
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
 
