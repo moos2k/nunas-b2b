@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { getProfile } from '@/utils/supabase/queries'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import DeleteProductButton from './delete-button'
 
 export default async function AdminProductsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
@@ -46,8 +47,9 @@ export default async function AdminProductsPage({ params }: { params: Promise<{ 
                 <td className="px-4 py-3 text-gray-500">{product.sku ?? '-'}</td>
                 <td className="px-4 py-3 text-right">{product.currency} {Number(product.base_price).toFixed(2)}</td>
                 <td className="px-4 py-3 text-center">{product.is_active ? '✅' : '❌'}</td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-right space-x-3 whitespace-nowrap">
                   <Link href={`/${locale}/admin/products/${product.id}/edit`} className="text-blue-500 hover:underline">수정</Link>
+                  <DeleteProductButton productId={product.id} name={product.name} />
                 </td>
               </tr>
             ))}
