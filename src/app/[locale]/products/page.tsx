@@ -12,7 +12,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
     getProfile(),
     supabase
       .from('products')
-      .select('*, product_images(*)')
+      .select('*, product_images(*), price_lists(*)')
       .eq('is_active', true)
       .order('name', { ascending: true }),
   ])

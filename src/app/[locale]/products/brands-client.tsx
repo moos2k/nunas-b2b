@@ -14,6 +14,20 @@ interface Brand {
   price_list_url: string | null
   website_url: string | null
   product_images: { id: string; url: string }[]
+  price_lists: { id: string; url: string; filename: string | null }[]
+}
+
+// 여러 파일을 순차 다운로드 (브라우저가 동시 다운로드를 막지 않도록 0.4초 간격)
+function downloadAll(brand: Brand) {
+  brand.price_lists.forEach((pl, i) => {
+    setTimeout(() => {
+      const a = document.createElement('a')
+      a.href = `${pl.url}?download=${encodeURIComponent(pl.filename ?? `${brand.name}-${i + 1}.xlsx`)}`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    }, i * 400)
+  })
 }
 
 interface Props {
@@ -98,19 +112,22 @@ export default function BrandsClient({ brands, locale, isKo }: Props) {
                 </p>
               )}
 
-              {/* 가격표 다운로드 버튼 */}
-              {brand.price_list_url ? (
-                <a
-                  href={`${brand.price_list_url}?download=${encodeURIComponent(brand.name)}.xlsx`}
+              {/* 가격표 다운로드 버튼 (파일 개수 표시, 전체 다운로드) */}
+              {brand.price_lists?.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => downloadAll(brand)}
                   className="relative z-10 mt-auto flex items-center justify-center gap-2 w-full text-white text-sm py-2.5 rounded hover:opacity-90 transition-opacity"
                   style={{ backgroundColor: '#0F172A' }}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
                   </svg>
-                  {isKo ? '가격표 보기' : 'Get Price List'}
-                </a>
+                  {isKo ? '가격표 다운로드' : 'Download Price Lists'}
+                  <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full font-semibold">
+                    {brand.price_lists.length}
+                  </span>
+                </button>
               ) : (
                 <div className="mt-auto flex items-center justify-center gap-2 w-full bg-[#F8F9FA] text-[#c6c6cd] text-sm py-2.5 rounded cursor-not-allowed">
                   {isKo ? '가격표 준비 중' : 'Price List Coming Soon'}

@@ -33,12 +33,19 @@ interface ProductImage {
   sort_order: number
 }
 
+interface PriceList {
+  id: string
+  url: string
+  filename: string | null
+}
+
 interface Props {
   product?: Product
   images?: ProductImage[]
+  priceLists?: PriceList[]
 }
 
-export default function ProductForm({ product, images = [] }: Props) {
+export default function ProductForm({ product, images = [], priceLists = [] }: Props) {
   const router = useRouter()
   const { locale } = useParams<{ locale: string }>()
   const isEdit = !!product
@@ -61,8 +68,8 @@ export default function ProductForm({ product, images = [] }: Props) {
   const [existingImages, setExistingImages] = useState<ProductImage[]>(images)
   const [newFiles, setNewFiles] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
-  const [priceListFile, setPriceListFile] = useState<File | null>(null)
-  const [currentPriceListUrl, setCurrentPriceListUrl] = useState<string | null>(product?.price_list_url ?? null)
+  const [existingPriceLists, setExistingPriceLists] = useState<PriceList[]>(priceLists)
+  const [newPriceListFiles, setNewPriceListFiles] = useState<File[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -113,6 +120,16 @@ export default function ProductForm({ product, images = [] }: Props) {
     setPreviews((prev) => prev.filter((_, i) => i !== index))
   }
 
+  // 기존 가격표 파일 삭제 (DB 레코드 + Storage 파일)
+  const removeExistingPriceList = async (pl: PriceList) => {
+    if (!confirm(`"${pl.filename ?? '가격표'}" 파일을 삭제하시겠습니까?`)) return
+    const supabase = createClient()
+    await supabase.from('price_lists').delete().eq('id', pl.id)
+    const path = pl.url.split('/price-lists/')[1]
+    if (path) await supabase.storage.from('price-lists').remove([decodeURIComponent(path)])
+    setExistingPriceLists((prev) => prev.filter((p) => p.id !== pl.id))
+  }
+
   const removeExistingImage = async (imageId: string, url: string) => {
     const supabase = createClient()
     const path = url.split('/product-image/')[1]
@@ -140,7 +157,6 @@ export default function ProductForm({ product, images = [] }: Props) {
       order_schedule: form.order_schedule || null,
       delivery_info: form.delivery_info || null,
       website_url: form.website_url || null,
-      price_list_url: currentPriceListUrl,
     }
 
     let productId = product?.id
@@ -154,22 +170,30 @@ export default function ProductForm({ product, images = [] }: Props) {
       productId = data.id
     }
 
-    // 2. 가격표 파일 업로드 (productId 확보 후)
-    if (priceListFile && productId) {
-      const ext = priceListFile.name.split('.').pop()?.toLowerCase() ?? 'xlsx'
-      const path = `${productId}/price-list.${ext}`
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('price-lists')
-        .upload(path, priceListFile, { upsert: true })
+    // 2. 가격표 파일들 업로드 (productId 확보 후, 여러 개 가능)
+    if (newPriceListFiles.length > 0 && productId) {
+      for (let i = 0; i < newPriceListFiles.length; i++) {
+        const file = newPriceListFiles[i]
+        const ext = file.name.split('.').pop()?.toLowerCase() ?? 'xlsx'
+        // Storage 경로는 영문/숫자만 (한글 파일명은 DB filename에 보존)
+        const path = `${productId}/${Date.now()}-${i}.${ext}`
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('price-lists')
+          .upload(path, file, { upsert: true })
 
-      if (uploadError) {
-        setError('Price list upload failed: ' + uploadError.message)
-        setLoading(false)
-        return
+        if (uploadError) {
+          setError('Price list upload failed: ' + uploadError.message)
+          setLoading(false)
+          return
+        }
+
+        const { data: urlData } = supabase.storage.from('price-lists').getPublicUrl(uploadData.path)
+        await supabase.from('price_lists').insert({
+          product_id: productId,
+          url: urlData.publicUrl,
+          filename: file.name,
+        })
       }
-
-      const { data: urlData } = supabase.storage.from('price-lists').getPublicUrl(uploadData.path)
-      await supabase.from('products').update({ price_list_url: urlData.publicUrl }).eq('id', productId)
     }
 
     // 이미지 업로드
@@ -328,28 +352,47 @@ export default function ProductForm({ product, images = [] }: Props) {
         </div>
       </div>
 
-      {/* 가격표 파일 */}
+      {/* 가격표 파일 (여러 개 가능) */}
       <div className="border-t pt-5">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">가격표 (Price List)</p>
-        {currentPriceListUrl && (
-          <div className="flex items-center gap-3 mb-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-4">
+          가격표 (Price List) {existingPriceLists.length + newPriceListFiles.length > 0 && `— ${existingPriceLists.length + newPriceListFiles.length}개`}
+        </p>
+
+        {/* 기존 파일 목록 */}
+        {existingPriceLists.map((pl) => (
+          <div key={pl.id} className="flex items-center gap-3 mb-2 p-3 bg-green-50 border border-green-200 rounded-lg">
             <svg className="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <a href={currentPriceListUrl} target="_blank" rel="noopener noreferrer"
+            <a href={pl.url} target="_blank" rel="noopener noreferrer"
               className="text-sm text-green-700 hover:underline flex-1 truncate">
-              현재 파일 보기
+              {pl.filename ?? '가격표 파일'}
             </a>
-            <button type="button" onClick={() => setCurrentPriceListUrl(null)}
-              className="text-xs text-red-400 hover:text-red-600">삭제</button>
+            <button type="button" onClick={() => removeExistingPriceList(pl)}
+              className="text-xs text-red-400 hover:text-red-600 shrink-0">삭제</button>
           </div>
-        )}
+        ))}
+
+        {/* 새로 추가할 파일 목록 */}
+        {newPriceListFiles.map((file, i) => (
+          <div key={i} className="flex items-center gap-3 mb-2 p-3 bg-blue-50 border border-blue-200 border-dashed rounded-lg">
+            <svg className="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span className="text-sm text-blue-700 flex-1 truncate">{file.name} <span className="text-xs">(저장 시 업로드)</span></span>
+            <button type="button" onClick={() => setNewPriceListFiles((prev) => prev.filter((_, j) => j !== i))}
+              className="text-xs text-red-400 hover:text-red-600 shrink-0">제거</button>
+          </div>
+        ))}
+
         <label className="flex items-center gap-2 cursor-pointer w-fit border rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          {priceListFile ? priceListFile.name : '파일 선택 (Excel / PDF)'}
-          <input type="file" accept=".xlsx,.xls,.pdf,.csv" onChange={(e) => setPriceListFile(e.target.files?.[0] ?? null)} className="hidden" />
+          파일 추가 (Excel / PDF, 여러 개 선택 가능)
+          <input type="file" accept=".xlsx,.xls,.pdf,.csv" multiple
+            onChange={(e) => { setNewPriceListFiles((prev) => [...prev, ...Array.from(e.target.files ?? [])]); e.target.value = '' }}
+            className="hidden" />
         </label>
       </div>
 
