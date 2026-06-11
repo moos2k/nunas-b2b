@@ -42,7 +42,7 @@ export default async function OrderDetailPage({ params }: Props) {
             </div>
             <div className="text-right">
               <p className="text-sm text-[#1a1a1a]">{item.currency} {(item.unit_price * item.quantity).toFixed(2)}</p>
-              <p className="text-[10px] text-[#aaa] mt-1">{item.currency} {Number(item.unit_price).toFixed(2)} / unit</p>
+              <p className="text-[10px] text-[#aaa] mt-1">{item.currency} {Number(item.unit_price).toFixed(2)} / {locale === 'ko' ? '개' : 'unit'}</p>
             </div>
           </div>
         ))}

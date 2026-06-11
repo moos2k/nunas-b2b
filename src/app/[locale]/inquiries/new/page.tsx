@@ -26,7 +26,11 @@ export default function NewInquiryPage() {
 
     const { data, error } = await supabase.from('inquiries').insert({ customer_id: user.id, title, content }).select().single()
 
-    if (error || !data) { setError('Failed to submit inquiry.'); setLoading(false); return }
+    if (error || !data) {
+      setError(locale === 'ko' ? '문의 제출에 실패했습니다. 다시 시도해주세요.' : 'Failed to submit inquiry.')
+      setLoading(false)
+      return
+    }
     router.push(`/${locale}/inquiries/${data.id}`)
   }
 
