@@ -3,6 +3,7 @@
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { sendMail, approvalEmail, rejectionEmail } from '@/utils/email'
 
 function getServiceClient() {
   return createServiceClient(
@@ -40,6 +41,11 @@ export async function approveSignup(requestId: string, email: string) {
   // signup_requests 상태도 approved로
   await service.from('signup_requests').update({ status: 'approved' }).eq('id', requestId)
 
+  // 승인 안내 메일 발송 (실패해도 승인 처리는 유지)
+  const { data: req } = await service.from('signup_requests').select('full_name').eq('id', requestId).single()
+  const mail = approvalEmail(req?.full_name ?? email)
+  await sendMail(email, mail.subject, mail.html)
+
   revalidatePath('/admin/signups')
   return { success: true }
 }
@@ -58,6 +64,11 @@ export async function rejectSignup(requestId: string, email: string) {
   if (targetUser) {
     await service.from('profiles').update({ status: 'rejected' }).eq('id', targetUser.id)
   }
+
+  // 거절 안내 메일 발송 (실패해도 거절 처리는 유지)
+  const { data: req } = await service.from('signup_requests').select('full_name').eq('id', requestId).single()
+  const mail = rejectionEmail(req?.full_name ?? email)
+  await sendMail(email, mail.subject, mail.html)
 
   revalidatePath('/admin/signups')
   return { success: true }
