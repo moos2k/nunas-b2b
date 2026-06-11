@@ -42,6 +42,16 @@ export default function LoginPage() {
       return
     }
 
+    // 거절되었거나 비활성화된 계정
+    if (profile && profile.status !== 'active') {
+      await supabase.auth.signOut()
+      setError(isKo
+        ? '이용이 제한된 계정입니다. 담당자에게 문의해 주세요.'
+        : 'This account is not active. Please contact our team.')
+      setLoading(false)
+      return
+    }
+
     if (profile?.role === 'admin') {
       router.push(`/${locale}/admin`)
     } else {
