@@ -89,9 +89,7 @@ export default function BrandsClient({ brands, locale, isKo }: Props) {
               {/* 가격표 다운로드 버튼 */}
               {brand.price_list_url ? (
                 <a
-                  href={brand.price_list_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`${brand.price_list_url}?download=${encodeURIComponent(brand.name)}.xlsx`}
                   className="relative z-10 mt-auto flex items-center justify-center gap-2 w-full text-white text-sm py-2.5 rounded hover:opacity-90 transition-opacity"
                   style={{ backgroundColor: '#0F172A' }}
                 >
