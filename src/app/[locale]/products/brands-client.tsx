@@ -17,17 +17,34 @@ interface Brand {
   price_lists: { id: string; url: string; filename: string | null }[]
 }
 
-// 여러 파일을 순차 다운로드 (브라우저가 동시 다운로드를 막지 않도록 0.4초 간격)
-function downloadAll(brand: Brand) {
-  brand.price_lists.forEach((pl, i) => {
-    setTimeout(() => {
-      const a = document.createElement('a')
-      a.href = `${pl.url}?download=${encodeURIComponent(pl.filename ?? `${brand.name}-${i + 1}.xlsx`)}`
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-    }, i * 400)
-  })
+// 파일 1개면 바로 다운로드, 여러 개면 ZIP으로 묶어서 한 번에 다운로드
+async function downloadAll(brand: Brand) {
+  if (brand.price_lists.length === 1) {
+    const pl = brand.price_lists[0]
+    const a = document.createElement('a')
+    a.href = `${pl.url}?download=${encodeURIComponent(pl.filename ?? `${brand.name}.xlsx`)}`
+    a.click()
+    return
+  }
+
+  const JSZip = (await import('jszip')).default
+  const zip = new JSZip()
+
+  await Promise.all(
+    brand.price_lists.map(async (pl, i) => {
+      const res = await fetch(pl.url)
+      const blob = await res.blob()
+      zip.file(pl.filename ?? `${brand.name}-${i + 1}.xlsx`, blob)
+    })
+  )
+
+  const zipBlob = await zip.generateAsync({ type: 'blob' })
+  const url = URL.createObjectURL(zipBlob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${brand.name}.zip`
+  a.click()
+  URL.revokeObjectURL(url)
 }
 
 interface Props {
@@ -38,6 +55,17 @@ interface Props {
 
 export default function BrandsClient({ brands, locale, isKo }: Props) {
   const [query, setQuery] = useState('')
+  const [zippingId, setZippingId] = useState<string | null>(null)
+
+  const handleDownload = async (brand: Brand) => {
+    if (zippingId) return
+    setZippingId(brand.id)
+    try {
+      await downloadAll(brand)
+    } finally {
+      setZippingId(null)
+    }
+  }
 
   const filtered = brands.filter((b) =>
     b.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -116,14 +144,17 @@ export default function BrandsClient({ brands, locale, isKo }: Props) {
               {brand.price_lists?.length > 0 ? (
                 <button
                   type="button"
-                  onClick={() => downloadAll(brand)}
-                  className="relative z-10 mt-auto flex items-center justify-center gap-2 w-full text-white text-sm py-2.5 rounded hover:opacity-90 transition-opacity"
+                  onClick={() => handleDownload(brand)}
+                  disabled={zippingId === brand.id}
+                  className="relative z-10 mt-auto flex items-center justify-center gap-2 w-full text-white text-sm py-2.5 rounded hover:opacity-90 transition-opacity disabled:opacity-60"
                   style={{ backgroundColor: '#0F172A' }}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12m0 0l-4-4m4 4l4-4" />
                   </svg>
-                  {isKo ? '가격표 다운로드' : 'Download Price Lists'}
+                  {zippingId === brand.id
+                    ? (isKo ? '파일 준비 중...' : 'Preparing...')
+                    : (isKo ? '가격표 다운로드' : 'Download Price Lists')}
                   <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full font-semibold">
                     {brand.price_lists.length}
                   </span>
