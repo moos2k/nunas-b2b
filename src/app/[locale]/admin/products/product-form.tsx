@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import Image from 'next/image'
+import { fetchBrandLogo } from './actions'
 
 interface Product {
   id: string
@@ -17,6 +18,13 @@ interface Product {
   order_schedule: string | null
   delivery_info: string | null
   price_list_url: string | null
+  website_url: string | null
+}
+
+interface BrandSuggestion {
+  name: string
+  domain: string
+  logo: string
 }
 
 interface ProductImage {
@@ -45,7 +53,11 @@ export default function ProductForm({ product, images = [] }: Props) {
     is_active: product?.is_active ?? true,
     order_schedule: product?.order_schedule ?? '',
     delivery_info: product?.delivery_info ?? '',
+    website_url: product?.website_url ?? '',
   })
+  const [suggestions, setSuggestions] = useState<BrandSuggestion[]>([])
+  const [searching, setSearching] = useState(false)
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [existingImages, setExistingImages] = useState<ProductImage[]>(images)
   const [newFiles, setNewFiles] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
@@ -53,6 +65,41 @@ export default function ProductForm({ product, images = [] }: Props) {
   const [currentPriceListUrl, setCurrentPriceListUrl] = useState<string | null>(product?.price_list_url ?? null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // 브랜드 검색 (Clearbit 자동완성 — 입력 후 0.4초 디바운스)
+  const handleBrandSearch = (query: string) => {
+    if (searchTimer.current) clearTimeout(searchTimer.current)
+    if (query.trim().length < 2) { setSuggestions([]); return }
+    searchTimer.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://autocomplete.clearbit.com/v1/companies/suggest?query=${encodeURIComponent(query)}`)
+        if (res.ok) setSuggestions(await res.json())
+      } catch { setSuggestions([]) }
+    }, 400)
+  }
+
+  // 추천 선택 → 이름/홈페이지 자동 입력 + 로고 자동 첨부
+  const applySuggestion = async (s: BrandSuggestion) => {
+    setSuggestions([])
+    setSearching(true)
+    setForm((prev) => ({
+      ...prev,
+      name: prev.name || s.name,
+      website_url: `https://${s.domain}`,
+    }))
+
+    const result = await fetchBrandLogo(s.domain)
+    if (result.base64) {
+      const byteString = atob(result.base64)
+      const bytes = new Uint8Array(byteString.length)
+      for (let i = 0; i < byteString.length; i++) bytes[i] = byteString.charCodeAt(i)
+      const ext = result.contentType?.includes('jpeg') ? 'jpg' : 'png'
+      const file = new File([bytes], `logo.${ext}`, { type: result.contentType ?? 'image/png' })
+      setNewFiles((prev) => [...prev, file])
+      setPreviews((prev) => [...prev, URL.createObjectURL(file)])
+    }
+    setSearching(false)
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? [])
@@ -92,6 +139,7 @@ export default function ProductForm({ product, images = [] }: Props) {
       is_active: form.is_active,
       order_schedule: form.order_schedule || null,
       delivery_info: form.delivery_info || null,
+      website_url: form.website_url || null,
       price_list_url: currentPriceListUrl,
     }
 
@@ -159,6 +207,40 @@ export default function ProductForm({ product, images = [] }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
 
+      {/* 브랜드 자동 검색 */}
+      <div className="relative bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <label className="block text-sm font-semibold text-blue-900 mb-1">
+          🔍 브랜드 자동 검색
+        </label>
+        <p className="text-xs text-blue-700 mb-2">영문 브랜드명을 입력하면 회사명·홈페이지·로고를 자동으로 채워줍니다. (예: missha, laneige)</p>
+        <input
+          type="text"
+          onChange={(e) => handleBrandSearch(e.target.value)}
+          placeholder="브랜드 이름 검색..."
+          className="w-full border border-blue-300 bg-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        {searching && <p className="text-xs text-blue-600 mt-2">로고 가져오는 중...</p>}
+        {suggestions.length > 0 && (
+          <div className="absolute left-4 right-4 top-full -mt-1 bg-white border rounded-lg shadow-lg z-20 overflow-hidden">
+            {suggestions.map((s) => (
+              <button
+                key={s.domain}
+                type="button"
+                onClick={() => applySuggestion(s)}
+                className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 text-left border-b last:border-b-0"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={s.logo} alt={s.name} className="w-8 h-8 rounded object-contain bg-gray-50" />
+                <div>
+                  <p className="text-sm font-medium">{s.name}</p>
+                  <p className="text-xs text-gray-400">{s.domain}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* 기본 정보 */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -170,6 +252,17 @@ export default function ProductForm({ product, images = [] }: Props) {
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           required
           placeholder="e.g. ABIB"
+          className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">홈페이지 URL</label>
+        <input
+          type="url"
+          value={form.website_url}
+          onChange={(e) => setForm({ ...form, website_url: e.target.value })}
+          placeholder="https://..."
           className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
         />
       </div>
