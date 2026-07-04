@@ -117,10 +117,11 @@ export default function InstallPrompt() {
           style={{ background: NAVY, border: `1px solid ${GOLD}66` }}
         >
           <div
-            className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 animate-pwa-badge"
-            style={{ background: GOLD }}
+            className="w-11 h-11 rounded-full overflow-hidden shrink-0 animate-pwa-badge"
+            style={{ background: '#F8F9FA' }}
           >
-            <span style={{ color: NAVY, fontFamily: 'serif', fontWeight: 700, fontSize: 20 }}>J</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icons/icon-64.png" alt="" className="w-full h-full object-cover" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-white">{t.title}</p>

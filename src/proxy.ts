@@ -12,10 +12,6 @@ export async function proxy(request: NextRequest) {
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
-    pathname === '/icon' ||
-    pathname === '/apple-icon' ||
-    pathname === '/icon-192' ||
-    pathname === '/icon-512' ||
     pathname === '/manifest.webmanifest' ||
     pathname === '/sitemap.xml' ||
     pathname === '/robots.txt' ||
