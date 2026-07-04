@@ -111,25 +111,32 @@ export default function InstallPrompt() {
 
   return (
     <>
-      <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-md">
-        <div className="rounded-lg border bg-white p-4 shadow-lg flex items-start gap-3" style={{ borderColor: '#E2E8F0' }}>
-          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: NAVY }}>
-            <span style={{ color: GOLD, fontFamily: 'serif', fontWeight: 700, fontSize: 18 }}>J</span>
+      <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-md animate-pwa-banner">
+        <div
+          className="rounded-xl p-4 shadow-2xl flex items-start gap-3"
+          style={{ background: NAVY, border: `1px solid ${GOLD}66` }}
+        >
+          <div
+            className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 animate-pwa-badge"
+            style={{ background: GOLD }}
+          >
+            <span style={{ color: NAVY, fontFamily: 'serif', fontWeight: 700, fontSize: 20 }}>J</span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold" style={{ color: NAVY }}>{t.title}</p>
-            <p className="text-xs text-[#76777d] mt-0.5">{t.body}</p>
-            <div className="flex gap-3 mt-3">
+            <p className="text-sm font-semibold text-white">{t.title}</p>
+            <p className="text-xs mt-0.5" style={{ color: '#B8C1D1' }}>{t.body}</p>
+            <div className="flex items-center gap-4 mt-3">
               <button
                 onClick={handleInstallClick}
-                className="text-xs font-semibold uppercase tracking-wide px-4 py-2 rounded text-white"
-                style={{ background: NAVY }}
+                className="text-xs font-bold uppercase tracking-wide px-5 py-2.5 rounded-lg"
+                style={{ background: GOLD, color: NAVY }}
               >
                 {t.install}
               </button>
               <button
                 onClick={dismiss}
-                className="text-xs font-semibold uppercase tracking-wide px-4 py-2 text-[#76777d]"
+                className="text-xs font-semibold uppercase tracking-wide"
+                style={{ color: '#B8C1D1' }}
               >
                 {t.later}
               </button>
