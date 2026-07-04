@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'
 import { Cormorant_Garamond, Montserrat, Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/navbar'
+import InstallPrompt from '@/components/install-prompt'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 const cormorant = Cormorant_Garamond({
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen flex flex-col bg-[#F8F9FA] text-[#191c1d]" style={{ fontFamily: 'var(--font-inter)' }}>
         <Navbar />
         <div className="flex-1">{children}</div>
+        <InstallPrompt />
       </body>
     </html>
   )
