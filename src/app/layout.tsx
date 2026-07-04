@@ -24,6 +24,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'J.ON International',
   description: 'Korean Cosmetics Wholesale Distribution Platform',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'J.ON',
+  },
 }
 
 export const viewport: Viewport = {
