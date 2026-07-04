@@ -53,7 +53,7 @@ export function approvalEmail(name: string) {
             Dear ${name},<br/>
             Your buyer account has been approved. You can now sign in with your email and password to browse our brand catalog and price lists.
           </p>
-          <a href="https://nunas-b2b.vercel.app" style="display: inline-block; background: #0F172A; color: #fff; padding: 12px 32px; text-decoration: none; font-size: 13px; margin-top: 16px;">
+          <a href="https://jayon.vercel.app" style="display: inline-block; background: #0F172A; color: #fff; padding: 12px 32px; text-decoration: none; font-size: 13px; margin-top: 16px;">
             로그인 / Sign In
           </a>
         </div>
