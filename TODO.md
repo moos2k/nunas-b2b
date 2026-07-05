@@ -18,7 +18,7 @@
 > **다음 세션 후보**: 누나 실사용 피드백 반영 / 주문 시 이메일 알림 / 발주서 양식 안내
 
 ## ⬜ 런칭까지 할 일
-- [x] **도메인 결정 & 구매** — `jay-on.co.kr` 구매 완료 (NHN), Vercel에 연결 완료 (2026-07-05). 네임서버를 Vercel DNS(ns1/ns2.vercel-dns.com)로 위임, `www.jay-on.co.kr`가 프로덕션. 승인 메일 로그인 링크(`src/utils/email.ts`) 새 도메인으로 갱신. **남은 일**: Supabase Auth Site URL/Redirect URLs도 새 도메인으로 갱신 필요.
+- [x] **도메인 결정 & 구매** — `jay-on.co.kr` 구매 완료 (NHN), Vercel에 연결 완료 (2026-07-05). 네임서버를 Vercel DNS(ns1/ns2.vercel-dns.com)로 위임, `www.jay-on.co.kr`가 프로덕션. 승인 메일 로그인 링크(`src/utils/email.ts`)와 Supabase Auth Site URL 모두 새 도메인으로 갱신 완료.
 - [ ] **사이트명 확정** — "제휴인 인터내셔널" 그대로 갈지 / 하이픈 유무 등 (현재 사이트는 Jay-On / J.ON 혼용 — 확정되면 일괄 교체)
 - [ ] **오픈일 결정**
 - [ ] **누나가 사이트 직접 써본 뒤 "부족한 점" 수집** → project1 범위 내에서 반영
