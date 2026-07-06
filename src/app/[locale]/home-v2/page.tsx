@@ -31,7 +31,7 @@ export default async function HomeV2({ params }: { params: Promise<{ locale: str
         <div className="max-w-[1280px] mx-auto px-6 h-16 flex justify-between items-center">
           <div className="flex items-baseline gap-2">
             <span className="text-lg font-bold tracking-tight" style={{ ...display, color: NAVY }}>
-              JAY-ON
+              J.ON
             </span>
             <span className="text-[10px] tracking-[0.25em] uppercase text-[#76777d] hidden sm:inline">International</span>
           </div>

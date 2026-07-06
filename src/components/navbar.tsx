@@ -71,7 +71,7 @@ export default function Navbar() {
         <Link href={profile.role === 'admin' ? `/${locale}/admin` : `/${locale}/products`}
           className="flex items-baseline gap-2">
           <span className="text-base font-bold tracking-tight" style={{ fontFamily: 'var(--font-montserrat)', color: NAVY }}>
-            JAY-ON
+            J.ON
           </span>
           <span className="text-[10px] tracking-[0.25em] uppercase text-[#76777d] hidden sm:inline">International</span>
         </Link>

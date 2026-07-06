@@ -64,7 +64,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm bg-white border border-[#E2E8F0] rounded p-10">
         <div className="text-center mb-12">
           <p className="text-lg font-bold tracking-tight" style={{ fontFamily: 'var(--font-montserrat)', color: '#0F172A' }}>
-            JAY-ON
+            J.ON
           </p>
           <p className="text-[10px] font-semibold tracking-[0.25em] uppercase text-[#76777d] mt-1">International</p>
         </div>
