@@ -391,7 +391,11 @@ export default function ProductForm({ product, images = [], priceLists = [] }: P
           </svg>
           파일 추가 (Excel / PDF, 여러 개 선택 가능)
           <input type="file" accept=".xlsx,.xls,.pdf,.csv" multiple
-            onChange={(e) => { setNewPriceListFiles((prev) => [...prev, ...Array.from(e.target.files ?? [])]); e.target.value = '' }}
+            onChange={(e) => {
+              const files = Array.from(e.target.files ?? [])
+              setNewPriceListFiles((prev) => [...prev, ...files])
+              e.target.value = ''
+            }}
             className="hidden" />
         </label>
       </div>

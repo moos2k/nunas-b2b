@@ -7,5 +7,19 @@
       "PowerShell(Get-ChildItem *)",
       "PowerShell(Invoke-WebRequest *)"
     ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "cd \"c:/dev/nunas-b2b\" && mkdir -p memory && { printf '## %s\\n' \"$(date '+%Y-%m-%d %H:%M:%S')\"; find . \\( -path ./node_modules -o -path ./.next -o -path ./.git -o -path ./memory -o -path ./.vercel \\) -prune -o -type f -mmin -720 -print 2>/dev/null | sed 's|^\\./||' | sort; printf '\\n'; } >> memory/last_session.md",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
   }
 }
