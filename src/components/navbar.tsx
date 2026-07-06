@@ -37,7 +37,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push(`/${locale}/login`)
+    router.push(`/${locale}`)
   }
 
   // 랜딩 페이지에선 숨김
