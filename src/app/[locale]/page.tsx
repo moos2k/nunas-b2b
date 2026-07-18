@@ -84,9 +84,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           {/* 통계 카드 */}
           <div className="lg:col-span-5 grid grid-cols-3 lg:grid-cols-1 gap-4">
             {[
-              { num: '20+', label: isKo ? 'K-뷰티 수출 브랜드' : 'K-Beauty Brands' },
-              { num: '10+', label: isKo ? '수출 국가' : 'Export Countries' },
-              { num: '3', label: isKo ? '핵심 수출 품목' : 'Core Export Lines' },
+              { num: '200+', label: isKo ? 'K-뷰티 수출 브랜드' : 'K-Beauty Brands' },
+              { num: '50+', label: isKo ? '수출 국가' : 'Export Countries' },
+              { num: '30+', label: isKo ? '핵심 수출 품목' : 'Core Export Lines' },
             ].map((s) => (
               <div key={s.num} className="bg-[#F8F9FA] border border-[#E2E8F0] rounded px-6 py-6 lg:flex lg:items-center lg:gap-4">
                 <p className="text-2xl lg:text-3xl font-bold" style={{ ...display, color: NAVY }}>{s.num}</p>
@@ -123,8 +123,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 no: '01',
                 title: isKo ? 'K-뷰티 브랜드 수출' : 'K-Beauty Export',
                 desc: isKo
-                  ? '미샤, 어퓨, 삐아, 닥터자르트, 라운드랩, 조선미녀 등 20여 개 K-COS 브랜드를 인도네시아·베트남·미주·중남미 등에 수출합니다.'
-                  : 'Exporting 20+ K-COS brands — MISSHA, A’PIEU, DR.JART+, ROUND LAB, Beauty of Joseon and more — to Indonesia, Vietnam, the Americas, and Latin America.',
+                  ? '미샤, 어퓨, 삐아, 닥터자르트, 라운드랩, 조선미녀 등 200여 개 K-COS 브랜드를 인도네시아·베트남·미주·중남미 등에 수출합니다.'
+                  : 'Exporting 200+ K-COS brands — MISSHA, A’PIEU, DR.JART+, ROUND LAB, Beauty of Joseon and more — to Indonesia, Vietnam, the Americas, and Latin America.',
                 tags: isKo ? ['총판', '유통'] : ['Distribution', 'Wholesale'],
               },
               {
